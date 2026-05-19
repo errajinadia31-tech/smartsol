@@ -15,7 +15,7 @@ class AssistantAiController extends Controller
         $prod = (float) $request->input('prod');
         $cap  = (float) $request->input('cap');
         $weather = $request->input('weather', 'unknown');
-        $hour = now()->format('H');
+        $hour = (int) now()->format('H'); 
 
         // ======================
         // Validation
@@ -67,18 +67,6 @@ class AssistantAiController extends Controller
         $trend = $diff >= 0 ? "تحسن" : "تراجع";
 
         // ======================
-        // AI Prompt
-        // ======================
-$prompt = "
-أنت خبير طاقة. الوقت: {$hour}. الإنتاج: {$prod}W. الكفاءة: {$currentEfficiency}%.
-التعليمات:
-- إذا كان الوقت بين 20:00 و 06:00: قل 'السيستيم دابا فوضعية راحة، نتلاقة غدا مع الشمش'.
-- إذا كان الوقت نهارا والكفاءة < 15%: قل 'كاين خلل، غالبا البانوات فيهم الغبار'.
-- ممنوع ذكر الأرقام الطويلة أو الحسابات المعقدة.
-- جاوب بجملة وحدة قصيرة ومباشرة بالدارجة المغربية.
-";
-
-        // ======================
         // API Key
         // ======================
         $apiKey = config('services.groq.api_key');
@@ -94,24 +82,40 @@ $prompt = "
             $response = Http::withToken($apiKey)
                 ->post('https://api.groq.com/openai/v1/chat/completions', [
                     'model' => 'llama-3.1-8b-instant',
-                    // F l-Controller, s7e7 l-content dyal system message:
-'messages' => [
-    [
-        'role' => 'system', 
-        'content' => 'أنت خبير طاقة شمسية مغربي. مهمتك هي تحليل البيانات وإعطاء نصيحة واحدة مختصرة جدا بالدارجة. ممنوع ذكر الأرقام التقنية المملة (مثل 12.9291) إلا إذا كانت ضرورية جدا. ركز على "الحالة" و "شنو خاص يدار".'
-    ],
-    [
-        'role' => 'user', 
-        'content' => "البيانات: إنتاج {$prod}W، كفاءة {$currentEfficiency}%، وقت: {$hour}. قارن واعطيني الخلاصة."
-    ]
-],
-                    'temperature' => 0.2,
-                    'max_tokens' => 120
+                    'messages' => [
+                        [
+                            'role' => 'system', 
+                            'content' => "أنت خبير طاقة شمسية مغربي ومساعد ذكي لـ نظام 'SmartSol'. 
+                            تحدث بالدارجة المغربية القحة (Moroccan Darija) فقط وفقط! 
+                            ممنوع منعا كليا استعمال كلمات مصرية (مثل: دي، يا رجل، مش، عشان) أو فصحى مبالغ فيها.
+                            
+                            قواعد صارمة للإجابة:
+                            1. جاوب بجملة واحدة قصيرة ومباشرة ومفيدة (Short and punchy).
+                            2. ممنوع ذكر الأرقام الطويلة أو الحسابات المعقدة (مثلا بدلا من 1.01% قل 1%).
+                            3. إذا كان الوقت ليلاً (بين 20 و 06): قل 'السيستيم دابا فوضع راحة، نتلاقاو غدا مع الشمش إن شاء الله.'
+                            4. إذا كان الوقت نهاراً والكفاءة أقل من 15%: ركز على أن هناك خلل أو غبار على الألواح (مثال: 'كاين خلل، غالبا البانوات فيهم الغبار خاصهم يتمسحو')."
+                        ],
+                        [
+                            'role' => 'user', 
+                            'content' => "البيانات الحالية: 
+                            - الوقت الحالي (الساعة): {$hour}:00
+                            - الإنتاج الحالي: {$prod} Watts
+                            - الكفاءة الحالية: {$eff}%
+                            - حالة السيستيم: {$status}
+                            - المنحنى مقارنة بالمعدل: {$trend} (المعدل هو: " . round($avg, 2) . "W)
+                            - الطقس: {$weather}
+                            
+                            عطيني تحليل سريع ونصيحة بالدارجة المغربية."
+                        ]
+                    ],
+                    'temperature' => 0.1, 
+                    'max_tokens' => 250   
                 ]);
 
             if (!$response->successful()) {
                 return response()->json([
-                    'error' => 'خطأ في الاتصال بالذكاء الاصطناعي'
+                    'error' => 'خطأ في الاتصال بالذكاء الاصطناعي',
+                    'debug' => $response->body() 
                 ], 500);
             }
 
@@ -119,7 +123,7 @@ $prompt = "
             // Response
             // ======================
             return response()->json([
-                'analysis' => $response['choices'][0]['message']['content'],
+                'analysis' => trim($response['choices'][0]['message']['content']),
                 'efficiency' => $eff,
                 'status' => $status,
                 'trend' => $trend,

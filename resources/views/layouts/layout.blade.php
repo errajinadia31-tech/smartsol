@@ -42,16 +42,13 @@
 
             <div class="flex items-center gap-3">
                 <div class="flex items-center border-r border-white/10 pr-4 gap-2">
-                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-[#FBB108] hover:text-black transition">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                    </button>
+                   
                     <button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-[#FBB108] hover:text-black transition relative">
                         <i class="fa-regular fa-bell text-xs"></i>
                         <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-black"></span>
                     </button>
                 </div>
-                
-               <div class="relative">
+<div class="relative">
     <button onclick="toggleProfileMenu(event)" class="flex items-center gap-3 pl-2 py-1 rounded-full hover:bg-white/5 transition focus:outline-none">
         <div class="w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#FBB108] to-yellow-200 text-black font-bold">
             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
@@ -59,23 +56,50 @@
         <i class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
     </button>
 
-    <div id="profileMenu" class="absolute right-0 mt-3 w-48 bg-[#121212] backdrop-blur-xl rounded-2xl border border-white/10 hidden shadow-2xl z-50 overflow-hidden">
+    <div id="profileMenu" class="absolute right-0 mt-3 w-48 bg-[#121212]/90 backdrop-blur-xl rounded-2xl border border-white/10 hidden shadow-2xl z-50 overflow-hidden">
         <div class="px-4 py-3 border-b border-white/5 bg-white/5">
             <p class="text-[10px] text-gray-400 uppercase tracking-tighter">Connecté en tant que</p>
-            <p class="text-sm font-bold truncate">{{ Auth::user()->name }}</p>
+            <p class="text-sm font-bold truncate text-white">{{ Auth::user()->name }}</p>
         </div>
+        
         <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 text-xs hover:bg-white/5 transition text-white">
             <i class="fa-regular fa-user text-[#FBB108]"></i> Mon Profil
         </a>
-<form method="POST" action="{{ route('logout') }}" id="logout-form">
-    @csrf
-    <button type="button" 
-            onclick="confirmLogout()"
-            class="w-full group flex items-center gap-3 px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-red-400/80 hover:text-red-400 hover:bg-red-500/5 transition-all duration-300 rounded-xl border border-transparent hover:border-red-500/10">
-        <i class="fa-solid fa-power-off group-hover:scale-110 transition-transform"></i>
-        <span>Déconnexion</span>
-    </button>
-</form>
+
+        <button type="button" 
+                onclick="openLogoutModal()"
+                class="w-full group flex items-center gap-3 px-4 py-3 text-xs font-medium text-red-400/80 hover:text-red-400 hover:bg-red-500/5 transition-all duration-200">
+            <i class="fa-solid fa-power-off group-hover:scale-110 transition-transform"></i>
+            <span>Déconnexion</span>
+        </button>
+    </div>
+</div>
+
+<div id="logout-modal" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-[#121212]/90 border border-white/10 w-full max-w-md p-6 rounded-2xl shadow-2xl backdrop-blur-xl transform transition-all scale-95 duration-300 mx-4">
+        
+        <div class="flex items-start gap-4">
+            <div class="p-3 bg-red-500/10 text-red-500 rounded-xl border border-red-500/20 shrink-0">
+                <i class="fa-solid fa-power-off text-lg"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-white tracking-wide">Déconnexion</h3>
+                <p class="text-xs text-gray-400 mt-1 leading-relaxed">Voulez-vous vraiment vous déconnecter de votre session SmartSol ?</p>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 mt-6">
+            <button onclick="closeLogoutModal()" class="px-4 py-2 text-xs font-medium text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all duration-200">
+                Annuler
+            </button>
+            
+            <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                @csrf
+                <button type="submit" class="px-4 py-2 text-xs font-medium text-black bg-gradient-to-r from-[#FBB108] to-yellow-300 hover:opacity-90 shadow-lg shadow-[#FBB108]/10 rounded-xl transition-all duration-200">
+                    Se déconnecter
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 <!-- Chat Toggle Button - SmartSol Blue & Yellow Edition -->
@@ -136,74 +160,44 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script>
-    async function sendMessage() {
-    const input   = document.getElementById('user-input');
-    const chatBox = document.getElementById('chat-messages');
-    const message = input.value.trim();
-
-    if (!message) return;
-
-    // ── User bubble ──────────────────────────────────────────────
-    chatBox.innerHTML += `
-        <div class="flex justify-end">
-            <div class="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-br-none max-w-[80%] text-sm">
-                ${message}
-            </div>
-        </div>`;
-
-    input.value = '';
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    // ── Loading bubble ───────────────────────────────────────────
-    const loadingId = 'load-' + Date.now();
-    chatBox.innerHTML += `
-        <div id="${loadingId}" class="flex justify-start">
-            <div class="bg-white/10 border border-white/10 text-white px-4 py-2 rounded-2xl rounded-bl-none text-sm animate-pulse">
-                كنفكر... ⚡
-            </div>
-        </div>`;
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    // ── API call ─────────────────────────────────────────────────
-    try {
-        const res = await fetch('/ask', {
-            method:  'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                        .getAttribute('content'),
-                'Accept':       'application/json',
-            },
-            body: JSON.stringify({ message }),
-        });
-
-        const data = await res.json();
-        document.getElementById(loadingId)?.remove();
-
-        // ── Bot bubble ───────────────────────────────────────────
-        const text = data.answer ?? 'ما جاوبش 😥';
-        chatBox.innerHTML += `
-            <div class="flex justify-start">
-                <div class="bg-white/10 border border-white/10 text-white px-4 py-2
-                            rounded-2xl rounded-bl-none max-w-[80%] text-sm
-                            leading-relaxed text-right" style="direction:rtl">
-                    ${text.replace(/\n/g, '<br>')}
-                </div>
-            </div>`;
-
-    } catch (err) {
-        document.getElementById(loadingId)?.remove();
-        chatBox.innerHTML += `
-            <div class="flex justify-start">
-                <div class="bg-red-500/80 text-white px-4 py-2 rounded-2xl text-sm">
-                    وقع مشكل في الاتصال 😥
-                </div>
-            </div>`;
-        console.error('[SolarBot]', err);
+    function toggleProfileMenu(event) {
+        event.stopPropagation();
+        const menu = document.getElementById('profileMenu');
+        menu.classList.toggle('hidden');
     }
 
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
+    function openLogoutModal() {
+        document.getElementById('profileMenu').classList.add('hidden');
+        
+        const modal = document.getElementById('logout-modal');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+        }, 10);
+    }
+
+    function closeLogoutModal() {
+        const modal = document.getElementById('logout-modal');
+        modal.querySelector('div').classList.remove('scale-100');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 150);
+    }
+
+    window.onclick = function(event) {
+        const menu = document.getElementById('profileMenu');
+        const modal = document.getElementById('logout-modal');
+        
+        if (!menu.classList.contains('hidden')) {
+            menu.classList.add('hidden');
+        }
+        
+        if (event.target == modal) {
+            closeLogoutModal();
+        }
+    }
 </script>
 </body>
 </html>

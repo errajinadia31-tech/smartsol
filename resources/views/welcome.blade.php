@@ -521,7 +521,7 @@ Accès limité à l’Agent AI (diagnostics simples)                        </li
                         <span class="text-white font-bold text-xl tracking-tighter uppercase italic">Smart<span class="text-[#FBB108]">Sol</span></span>
                     </div>
                     <p class="text-gray-500 text-sm leading-relaxed mb-6">
-                        Expertise technique en gestion d'énergie solaire et solutions IoT pour un avenir durable.
+                        Plateforme intelligente dédiée à l’analyse et l’optimisation de l’énergie solaire.
                     </p>
                     <div class="flex gap-4">
                         <a href="https://www.linkedin.com/in/nadia-erraji-17b804379/" target="_blank" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-[#FBB108] hover:text-[#FBB108] transition duration-300">

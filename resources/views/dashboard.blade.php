@@ -145,7 +145,7 @@
                         Lancer Diagnostic
                     </button>
                 </div>
-                <div id="ai-response" class="text-gray-400 font-medium italic text-sm border-t border-white/5 pt-4">
+                <div id="ai-response" class=" text-right text-gray-400 font-medium italic text-sm border-t border-white/5 pt-4">
                     انقر للحصول على تحليل ذكي لإنتاجك الحالي...
                 </div>
             </div>
