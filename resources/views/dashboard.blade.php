@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title','EnerSol | Dashboard')
+@section('title','SmartSol | Dashboard')
 @section('content')
 
 <main class="text-white px-8 mt-10 min-h-screen">
@@ -9,13 +9,13 @@
             <div class="lg:col-span-1">
                 <h1 class="text-6xl font-bold mb-2 leading-tight">
                     Welcome in,<br>
-                    <span class="italic">Ener<span class="text-[#FBB108]">Sol</span></span>
+                    <span class="italic">Smart<span class="text-[#FBB108]">Sol</span></span>
                 </h1>
                 <p class="text-gray-400 text-lg font-light max-w-xs leading-relaxed">
                     Suivi et analyse de la production et de la consommation d'énergie solaire en temps réel.
                 </p>
 
-                <div class="flex mb-8 mt-6">
+                <div class="flex mb-8 mt-6 gap-2">
                     <div class="w-10 h-10 flex items-center justify-center rounded-full border text-green-500 border-green-500/30 bg-green-500/5 hover:bg-green-500/20 transition-colors">
                         <i class="fa-solid fa-battery-full text-sm"></i>
                     </div>
@@ -30,203 +30,267 @@
 
             <div class="lg:col-span-2 flex justify-end">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-8 rounded-[1.5rem] w-[320px] transition-all hover:border-[#FBB108]/30 group shadow-xl">
-                        <div class="flex justify-between mb-6">
-                            <h2 class="text-gray-400 uppercase text-[10px] tracking-widest font-bold">Système 🔋</h2>
-                            <span class="text-[10px] text-green-500 bg-green-500/10 px-2 py-0.5 rounded italic">En Ligne</span>
+                    <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[2rem] w-[320px] min-h-[320px] flex flex-col justify-between transition-all hover:border-[#FBB108]/30 group shadow-2xl relative overflow-hidden">
+
+                        <div class="absolute -right-6 -top-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity rotate-12">
+                            <i class="fa-solid fa-microchip text-[10rem] text-white"></i>
                         </div>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-white text-4xl font-black italic tracking-tighter">{{ $totalPanels }}</span>
-                            <span class="text-gray-500 text-[10px] uppercase font-bold tracking-widest">Panneaux</span>
+
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="space-y-1">
+                                    <h2 class="text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black italic">Infrastructure</h2>
+                                    <p class="text-white text-xs font-bold tracking-tighter uppercase">Total des Unités</p>
+                                </div>
+                                <span class="text-[9px] text-green-500 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-black italic uppercase">
+                                    Système Live
+                                </span>
+                            </div>
+
+                            <div class="flex items-baseline gap-3 mb-8">
+                                <span class="text-white text-7xl font-black italic tracking-tighter group-hover:text-[#FBB108] transition-colors duration-500">
+                                    {{ str_pad($totalPanels, 2, '0', STR_PAD_LEFT) }}
+                                </span>
+                                <span class="text-gray-500 text-[14px] uppercase font-black tracking-widest italic">Panneaux </span>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 space-y-5 border-t border-white/5 pt-8">
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-[9px] uppercase font-black tracking-widest text-gray-500">
+                                    <span>Actifs</span>
+                                    <span class="text-white">{{ $activePanelsCount }}</span>
+                                </div>
+                                <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                                    <div class="bg-[#FBB108] h-full rounded-full" style="width: {{ $totalPanels > 0 ? ($activePanelsCount / $totalPanels) * 100 : 0 }}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-[9px] uppercase font-black tracking-widest text-gray-500">
+                                    <span>Maintenance</span>
+                                    <span class="text-red-500">{{ $maintenanceCount }}</span>
+                                </div>
+                                <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                                    <div class="bg-red-500 h-full rounded-full" style="width: {{ $totalPanels > 0 ? ($maintenanceCount / $totalPanels) * 100 : 0 }}%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-8 rounded-[1.5rem] w-[320px] transition-all hover:border-blue-400/30 group shadow-xl">
-                        <div class="flex justify-between items-center mb-8">
-                            <h2 class="text-gray-400 text-[10px] uppercase tracking-widest font-bold">Météo Locale</h2>
-                            @if(isset($weather['weather'][0]['icon']))
-                            <img src="http://openweathermap.org/img/wn/{{ $weather['weather'][0]['icon'] }}.png"
-                                class="w-10 h-10 opacity-80 group-hover:scale-110 transition-transform filter drop-shadow-[0_0_8px_rgba(251,177,8,0.5)]" alt="weather icon">
-                            @endif
+                    <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10  p-10 rounded-[2rem] w-[320px] min-h-[280px] flex flex-col justify-between transition-all hover:border-[#FBB108]/30 group shadow-xl relative overflow-hidden">
+
+                        <div class="absolute -right-6 -top-6 opacity-[0.03]  group-hover:opacity-[0.08] transition-opacity rotate-12">
+                            <i class="fa-solid fa-power-off text-[10rem] text-white"></i>
                         </div>
 
-                        @if($weather && isset($weather['main']))
-                        <div class="space-y-1">
-                            <h3 class="text-white text-2xl font-black italic tracking-tighter uppercase truncate">
-                                {{ $weather['name'] }}
-                            </h3>
-                            <div class="flex items-baseline gap-2">
-                                <span class="text-[#FBB108] text-4xl font-black italic">
-                                    {{ round($weather['main']['temp']) }}°
-                                </span>
-                                <span class="text-gray-500 text-[9px] uppercase font-bold tracking-[0.1em]">
-                                    {{ $weather['weather'][0]['description'] }}
-                                </span>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-center mb-10 ">
+                                <h2 class="text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black">Disponibilité</h2>
+                                <span class="text-[9px] text-gray-500 bg-white/5 px-3 py-1 rounded-full border border-white/5 font-black italic uppercase">Offline</span>
+                            </div>
+
+                            <div class="space-y-2">
+                                @php
+                                $inactiveCount = $totalPanels - $activePanelsCount - $maintenanceCount;
+                                @endphp
+                                <div class="flex items-baseline gap-3">
+                                    <span class="text-gray-400 text-6xl font-black italic tracking-tighter transition-transform group-hover:scale-105 duration-500">
+                                        {{ str_pad(max(0, $inactiveCount), 2, '0', STR_PAD_LEFT) }}
+                                    </span>
+                                    <span class="text-gray-500 text-[12px] uppercase font-black tracking-widest leading-none">Panneaux<br>Inactifs</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-8 flex justify-between border-t border-white/5 pt-4 text-[9px] text-gray-500 uppercase font-bold">
-                            <span>Humidité: <span class="text-white">{{ $weather['main']['humidity'] }}%</span></span>
-                            <span>Vent: <span class="text-white">{{ round($weather['wind']['speed']) }} km/h</span></span>
+
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-[9px] text-gray-600 mt-4 font-medium italic leading-relaxed max-w-[200px]">
+                                Unités hors service. Vérifiez les connexions réseau ou l'alimentation.
+                            </p>
                         </div>
-                        @else
-                        <div class="py-6 text-center italic text-gray-600 text-xs">Données météo indisponibles</div>
-                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-
-    <!-- card section  -->
-   <section class="mt-8">
+    <section class="mt-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
-            
+            <!-- Production Card -->
             <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-[#FBB108]/30 transition-all group shadow-2xl relative overflow-hidden">
                 <div class="absolute -right-2 -top-2 opacity-5 group-hover:opacity-10 transition-opacity">
                     <i class="fa-solid fa-sun text-8xl text-[#FBB108]"></i>
                 </div>
                 <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Production Actuelle</h2>
                 <div class="flex items-baseline gap-2">
-                    <span id="live-power" class="text-[#FBB108] text-6xl font-black italic tracking-tighter">0</span>
+                    <span id="live-power" class="text-[#FBB108] text-6xl font-black italic tracking-tighter">{{ $currentProduction }}</span>
                     <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Watts</span>
                 </div>
             </div>
 
-            <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-blue-500/30 transition-all group shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-2 -top-2 opacity-5 group-hover:opacity-10 transition-opacity">
-                    <i class="fa-solid fa-bolt text-8xl text-blue-500"></i>
-                </div>
-                <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Consommation Estimée</h2>
-                <div class="flex items-baseline gap-2">
-                    <span id="live-cons" class="text-blue-400 text-6xl font-black italic tracking-tighter">0</span>
-                    <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Watts</span>
-                </div>
-            </div>
-
+            <!-- Capacité Card -->
             <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-green-500/30 transition-all shadow-2xl">
                 <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Capacité Système</h2>
                 <div class="flex items-baseline gap-2">
-                    <span class="text-green-500 text-6xl font-black italic tracking-tighter">{{ number_format($totalPower) }}</span>
+                    <span id="total-cap" class="text-green-500 text-6xl font-black italic tracking-tighter">{{ $totalPower }}</span>
                     <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Wp</span>
                 </div>
             </div>
 
-            <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-red-500/30 transition-all shadow-2xl">
-                <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Maintenance</h2>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-red-500 text-6xl font-black italic tracking-tighter">{{ $maintenanceCount }}</span>
-                    <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Alertes</span>
+                <!-- AI Assistant Card -->
+            <div class="bg-[#121212]/70 border border-[#FBB108]/30 p-8 rounded-[2rem] md:col-span-2 shadow-3xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-[#FBB108] font-bold italic uppercase tracking-widest text-sm">Assistant SmartSol AI</h2>
+                    <button id="ai-btn" class="bg-[#FBB108] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase hover:scale-105 transition-all">
+                        Lancer Diagnostic
+                    </button>
+                </div>
+                <div id="ai-response" class="text-gray-400 font-medium italic text-sm border-t border-white/5 pt-4">
+                    انقر للحصول على تحليل ذكي لإنتاجك الحالي...
                 </div>
             </div>
-
+            <!-- Chart Section -->
             <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] flex flex-col w-full md:col-span-2 lg:col-span-4 shadow-3xl">
                 <div class="flex justify-between items-center mb-10 px-4">
-                    <h2 class="text-gray-300 font-bold italic uppercase tracking-widest text-sm border-l-2 border-[#FBB108] pl-4">Graphique de Production Live</h2>
-                    <span class="flex items-center gap-2 text-[10px] text-[#FBB108] bg-[#FBB108]/10 px-4 py-1 rounded-full border border-[#FBB108]/20 animate-pulse font-bold">● LIVE UPDATING</span>
+                    <h2 class="text-gray-300 font-bold italic uppercase tracking-widest text-sm border-l-2 border-[#FBB108] pl-4">Graphique de Production Réelle</h2>
+                    <span class="flex items-center gap-2 text-[10px] text-[#FBB108] bg-[#FBB108]/10 px-4 py-1 rounded-full border border-[#FBB108]/20 animate-pulse font-bold">● LIVE DATA</span>
                 </div>
                 <div class="h-[400px] w-full">
-                    
                     <canvas id="energyChart"></canvas>
                 </div>
             </div>
+            
         </div>
-    </section>
+
+</div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <script>
-    const ctx = document.getElementById('energyChart').getContext('2d');
+
+    // Example dyal update f l-dashboard
+function refreshAIStatus(currentProd, currentCap) {
+    fetch('/api/analyze-energy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prod: currentProd, cap: currentCap })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Hna katsift l-msg l-hadak l-box li f image_82185c.png
+        document.getElementById('ai-assistant-msg').innerText = data.analysis;
+        
+        // Ila bghiti t-badli l-color dyal l-border 3la hsab status
+        let box = document.getElementById('ai-box');
+        if(data.status === 'critical_low') box.style.borderColor = 'red';
+        else box.style.borderColor = '#fbbf24'; // Yellow dyal Enersol
+    });
+}
+    async function sendMessage() {
+    const input = document.getElementById('user-input');
+    const box = document.getElementById('chat-messages');
     
-    // تدرج لوني للإنتاج (الأصفر)
-    const prodGradient = ctx.createLinearGradient(0, 0, 0, 400);
-    prodGradient.addColorStop(0, 'rgba(251, 177, 8, 0.3)');
-    prodGradient.addColorStop(1, 'rgba(251, 177, 8, 0)');
+    if(!input.value) return;
 
-    const totalCapacity = {{ $totalPower ?? 0 }};
+    // 1. عرض ميساج المستخدم
+    box.innerHTML += `<div class="text-blue-400 mb-2 text-right">أنت: ${input.value}</div>`;
+    
+    // حفظ القيمة ومسح الحقل باش يبان الـ UX سريع
+    const message = input.value;
+    input.value = '';
 
-    const energyChart = new Chart(ctx, {
+    try {
+        // 2. إرسال الطلب
+        const response = await fetch('/chatbot/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // هاد السطر هو اللي كيحل مشكل الـ 419 Error
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+            },
+            body: JSON.stringify({ message: message })
+        });
+
+        if (!response.ok) throw new Error('مشكل في السيرفر');
+
+        const data = await response.json();
+        
+        // 3. عرض جواب الـ IA
+        box.innerHTML += `<div class="text-green-400 mb-2">SmartSol: ${data.answer}</div>`;
+        
+        // Scroll للاسفل باش يبان الجواب
+        box.scrollTop = box.scrollHeight;
+
+    } catch (error) {
+        box.innerHTML += `<div class="text-red-400 mb-2 text-xs">وقع مشكل، حاول مرة أخرى.</div>`;
+        console.error(error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const labels = @json(
+        $latestReadings->pluck('created_at')
+        ->map(fn($d) => \Carbon\Carbon::parse($d)->format('H:i'))
+    );
+
+    const dataValues = @json($latestReadings->pluck('power'));
+
+    const ctx = document.getElementById('energyChart');
+
+    new Chart(ctx, {
         type: 'line',
         data: {
-            labels: [], 
-            datasets: [
-                {
-                    label: 'Production (W)',
-                    data: [], 
-                    borderColor: '#FBB108',
-                    backgroundColor: prodGradient,
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 3,
-                    pointRadius: 0
-                },
-                {
-                    label: 'Consommation (W)',
-                    data: [], 
-                    borderColor: '#3b82f6', // لون أزرق للاستهلاك
-                    backgroundColor: 'transparent',
-                    fill: false,
-                    tension: 0.4,
-                    borderWidth: 2,
-                    borderDash: [5, 5], // خط متقطع باش نفرقوهم
-                    pointRadius: 0
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { 
-                legend: { 
-                    display: true, 
-                    labels: { color: '#9ca3af', font: { size: 10, weight: 'bold' } } 
-                } 
-            },
-            scales: {
-                y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#6b7280' } },
-                x: { grid: { display: false }, ticks: { color: '#6b7280' } }
-            }
+            labels,
+            datasets: [{
+                label: 'Production',
+                data: dataValues,
+                borderColor: '#FBB108',
+                backgroundColor: 'rgba(251,177,8,0.1)',
+                fill: true,
+                tension: 0.4
+            }]
         }
     });
 
-    function updateDashboard() {
-        let currentPower = 0;
-        let currentCons = 0;
+    // AI
+    const btn = document.getElementById('ai-btn');
+    const output = document.getElementById('ai-response');
 
-        if (totalCapacity > 0) {
-            // محاكاة الإنتاج
-            currentPower = Math.floor(totalCapacity * (0.7 + Math.random() * 0.2));
-            // محاكاة الاستهلاك (ديما كيكون متغير)
-            currentCons = Math.floor(currentPower * (0.5 + Math.random() * 0.3));
+    btn.addEventListener('click', async () => {
+
+        const power = parseFloat(document.getElementById('live-power').innerText) || 0;
+        const cap = parseFloat(document.getElementById('total-cap').innerText) || 0;
+
+        btn.innerText = "جاري التحليل...";
+        btn.disabled = true;
+
+        try {
+            const res = await fetch('/analyze-energy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ prod: power, cap: cap })
+            });
+
+            const data = await res.json();
+
+            output.innerHTML = data.analysis
+                ? "🤖 " + data.analysis
+                : "❌ " + data.error;
+
+        } catch (e) {
+            output.innerHTML = "❌ خطأ في الاتصال";
         }
 
-        const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-        
-        document.getElementById('live-power').innerText = currentPower;
-        document.getElementById('live-cons').innerText = currentCons;
+        btn.innerText = "Lancer Diagnostic";
+        btn.disabled = false;
+    });
 
-        if (energyChart.data.labels.length > 12) {
-            energyChart.data.labels.shift();
-            energyChart.data.datasets[0].data.shift(); // Production
-            energyChart.data.datasets[1].data.shift(); // Consommation
-        }
-
-        energyChart.data.labels.push(time);
-        energyChart.data.datasets[0].data.push(currentPower);
-        energyChart.data.datasets[1].data.push(currentCons);
-        energyChart.update();
-    }
-
-    setInterval(updateDashboard, 5000);
-    updateDashboard();
+});
 </script>
-
-<style>
-    /* تحسين شكل الـ Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0a0a; }
-    ::-webkit-scrollbar-thumb { background: #1f1f1f; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #FBB108; }
-</style>
-
 @endsection

@@ -6,24 +6,39 @@ use App\Models\Panel;
 use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class PanelController extends Controller
 {
-    public function index()
-    {
-        $panels = Panel::where('user_id', auth()->id())->get();
-        // 1. Njibo ga3 l-Zones (Global): Bach ay user y-selecti l-ville dyalo
-        $zones = Zone::all(); 
+public function index()
+{
+    $userId = Auth::id();
+    $zones = Zone::all();
+    $panels = Panel::where('user_id', $userId)->with('zone')->latest()->get();
 
-        // 2. Njibo l-Panels (Privé): Ghir li fihom user_id dyal l-user li t-connecta daba
-        // Haka user "A" madiychoufch panels dyal user "B"
-        $panels = Panel::where('user_id', Auth::id())
-                      ->with('zone') // Kan-jibo smit l-zone bach n-affichiwha f l-jadwal
-                      ->latest()     // Bach ytla3 l-jdid howa l-fowqani
-                      ->get();
-        
-        return view('panels.panel', compact('panels', 'zones'));
+    $weatherData = [];
+    $apiKey = env('OPENWEATHER_API_KEY');
+
+    // جلب المدن الفريدة فقط
+    $cities = $panels->pluck('zone.city')->unique()->filter();
+
+    foreach ($cities as $city) {
+        try {
+            $response = Http::get("https://api.openweathermap.org/data/2.5/weather", [
+                'q' => $city,
+                'appid' => $apiKey,
+                'units' => 'metric',
+                'lang' => 'fr'
+            ]);
+
+            if ($response->successful()) {
+                $weatherData[$city] = $response->json();
+            }
+        } catch (\Exception $e) { continue; }
     }
+
+    return view('panels.panel', compact('panels', 'zones', 'weatherData'));
+}
 
     public function store(Request $request)
     {

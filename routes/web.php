@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AssistantAiController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\SensorController;
@@ -32,10 +34,7 @@ Route::middleware('auth')->group(function () {
     
     // Panels route
     Route::resource('panels', PanelController::class);
-    
-    // Sensors route
-    Route::resource('sensors', SensorController::class);
-    
+
     // Energy Data route
     Route::resource('energy-data', EnergyDataController::class);
     
@@ -51,5 +50,17 @@ Route::middleware('auth')->group(function () {
 Route::get('/statistiques', [DashboardController::class, 'Statistiques'])
     ->middleware(['auth', 'verified'])
     ->name('statistiques');
+    
+    
+    Route::get('/repport', [ReportController::class, 'rapport'])
+        ->middleware(['auth', 'verified'])
+        ->name('rapport');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/analyze-energy', [AssistantAiController::class, 'analyzeEnergy'])->name('analyze.energy');
+
+
+
+});
 require __DIR__.'/auth.php';

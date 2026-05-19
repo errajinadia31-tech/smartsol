@@ -87,7 +87,7 @@
                     <tr>
                         <td colspan="4" class="px-8 py-20 text-center text-gray-500 italic">
                             <i class="fa-solid fa-plug-circle-exclamation mb-2 block text-2xl text-gray-600"></i>
-                            Aucune donnée disponible. En attente de connexion...
+                            Aucune donnée disponible
                         </td>
                     </tr>
                     @endforelse

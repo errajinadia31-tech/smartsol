@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <title>@yield('title', config('app.name', 'EnerSol'))</title>
+    <title>@yield('title', config('app.name', 'SmartSol'))</title>
     
     <style>
         body { font-family: 'Poppins', sans-serif; }
@@ -30,14 +30,14 @@
         <header class="flex items-center justify-between px-8 py-4 text-white mb-6">
             <div class="flex items-center">
                 <img src="{{ asset('images/logo1.png') }}" class="w-[38px]" alt="Logo">
-                <span class="font-bold text-2xl tracking-tighter uppercase italic">Ener<span class="text-[#FBB108]">Sol</span></span>
+                <span class="font-bold text-2xl tracking-tighter uppercase italic">Smart<span class="text-[#FBB108]">Sol</span></span>
             </div>
             
             <nav class="hidden lg:flex gap-3 text-xs uppercase tracking-widest">
                 <a href="{{ route('dashboard') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('dashboard') ? 'active-nav' : '' }}">Dashboard</a>
                 <a href="{{ route('panels.index') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('panels.index') ? 'active-nav' : '' }}">Panneaux</a>
-                <a href="{{ route('statistiques') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('statistiques') ? 'active-nav' : '' }}">Statistique</a>
-                <a href="#" class="nav-link rounded-full px-5 py-2.5">Rapports</a>
+                <a href="{{ route('statistiques') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('statistiques') ? 'active-nav' : '' }}">Statistiques</a>
+                <a href="{{ route('rapport') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('rapport')? 'active-nav' : '' }}">Rapports</a>
             </nav>
 
             <div class="flex items-center gap-3">
@@ -78,6 +78,44 @@
 </form>
     </div>
 </div>
+<!-- Chat Toggle Button - SmartSol Blue & Yellow Edition -->
+<button onclick="toggleChat()" id="chat-toggle-btn" 
+    class="fixed bottom-8 right-8 w-16 h-16 bg-[#1a1a1a]/60 backdrop-blur-xl border border-blue-500/30 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] hover:border-[#FBB108] transition-all duration-500 flex items-center justify-center group z-50">
+    
+    <!-- Animated Blue Pulse (Zre9) -->
+    <div class="absolute inset-0 rounded-2xl bg-blue-600 opacity-20 animate-pulse group-hover:opacity-40 transition-opacity"></div>
+    
+    <!-- Yellow Glow on Hover (Sfer) -->
+    <div class="absolute inset-0 rounded-2xl bg-[#FBB108] opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></div>
+    
+    <!-- Icon (Yellow to Blue transition) -->
+    <i class="fa-brands fa-bots text-[#FBB108] text-3xl group-hover:text-blue-400 group-hover:scale-110 transition-all duration-300 relative z-10"></i>
+</button>
+
+<div id="chat-window" class="fixed bottom-20 right-5 w-80 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl hidden flex-col h-[450px] z-50 overflow-hidden animate-fade-in-up">
+    
+    <div class="p-4 border-b border-white/10 font-bold text-white bg-white/5 flex justify-between items-center">
+        <span>🤖 SmartSol Chatbot</span>
+        <button onclick="toggleChat()" class="text-gray-400 hover:text-white">✕</button>
+    </div>
+
+    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto text-sm text-gray-200 space-y-4 scrollbar-thin scrollbar-thumb-white/20">
+        <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none">
+            hi 
+    </div>
+    </div>
+
+    <div class="p-3 bg-white/5 border-t border-white/10 flex gap-2">
+        <input id="user-input" 
+               type="text" 
+               onkeypress="if(event.key === 'Enter') sendMessage()"
+               class="flex-1 bg-black/40 border border-white/10 rounded-xl text-white p-2 text-xs focus:outline-none focus:border-blue-500 transition-colors" 
+               placeholder="سولني على الطاقة...">
+        
+        <button onclick="sendMessage()" class="bg-blue-600 hover:bg-blue-500 p-2 rounded-xl text-white transition-transform active:scale-95">
+            🚀
+        </button>
+    </div>
             </div>
         </header>
         <!-- navbar end -->
@@ -95,46 +133,77 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #FBB108; }
     </style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-    function toggleProfileMenu(event) {
-        event.stopPropagation();
-        const menu = document.getElementById('profileMenu');
-        menu.classList.toggle('hidden');
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script>
+    async function sendMessage() {
+    const input   = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-messages');
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // ── User bubble ──────────────────────────────────────────────
+    chatBox.innerHTML += `
+        <div class="flex justify-end">
+            <div class="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-br-none max-w-[80%] text-sm">
+                ${message}
+            </div>
+        </div>`;
+
+    input.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // ── Loading bubble ───────────────────────────────────────────
+    const loadingId = 'load-' + Date.now();
+    chatBox.innerHTML += `
+        <div id="${loadingId}" class="flex justify-start">
+            <div class="bg-white/10 border border-white/10 text-white px-4 py-2 rounded-2xl rounded-bl-none text-sm animate-pulse">
+                كنفكر... ⚡
+            </div>
+        </div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // ── API call ─────────────────────────────────────────────────
+    try {
+        const res = await fetch('/ask', {
+            method:  'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute('content'),
+                'Accept':       'application/json',
+            },
+            body: JSON.stringify({ message }),
+        });
+
+        const data = await res.json();
+        document.getElementById(loadingId)?.remove();
+
+        // ── Bot bubble ───────────────────────────────────────────
+        const text = data.answer ?? 'ما جاوبش 😥';
+        chatBox.innerHTML += `
+            <div class="flex justify-start">
+                <div class="bg-white/10 border border-white/10 text-white px-4 py-2
+                            rounded-2xl rounded-bl-none max-w-[80%] text-sm
+                            leading-relaxed text-right" style="direction:rtl">
+                    ${text.replace(/\n/g, '<br>')}
+                </div>
+            </div>`;
+
+    } catch (err) {
+        document.getElementById(loadingId)?.remove();
+        chatBox.innerHTML += `
+            <div class="flex justify-start">
+                <div class="bg-red-500/80 text-white px-4 py-2 rounded-2xl text-sm">
+                    وقع مشكل في الاتصال 😥
+                </div>
+            </div>`;
+        console.error('[SolarBot]', err);
     }
 
-    window.addEventListener('click', function(e) {
-        const menu = document.getElementById('profileMenu');
-        if (!menu.contains(e.target)) {
-            menu.classList.add('hidden');
-        }
-    });
-function confirmLogout() {
-    Swal.fire({
-        title: '<span class="text-white uppercase tracking-widest text-lg font-black italic">Déconnexion</span>',
-        html: '<p class="text-gray-400 text-xs">Voulez-vous vraiment quitter l\'interface EnerSol ?</p>',
-        background: '#121212', 
-        showCancelButton: true,
-        confirmButtonColor: '#FBB108', 
-        cancelButtonColor: 'rgba(255,255,255,0.05)', 
-        confirmButtonText: '<span class="text-black font-bold text-xs uppercase">Oui, Quitter</span>',
-        cancelButtonText: '<span class="text-gray-400 font-bold text-xs uppercase">Annuler</span>',
-        backdrop: `rgba(0,0,0,0.8)`, 
-        
-        // --- التعديلات الجديدة ---
-        heightAuto: false, 
-        scrollbarPadding: false,
-        // -----------------------
-
-        customClass: {
-            popup: 'border border-white/10 rounded-[1.5rem] shadow-2xl', 
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('logout-form').submit();
-        }
-    })
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
-
 </script>
 </body>
 </html>

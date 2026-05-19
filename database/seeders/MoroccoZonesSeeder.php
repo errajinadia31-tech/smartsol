@@ -3,12 +3,25 @@
 namespace Database\Seeders;
 
 use App\Models\Zone;
+use App\Models\User; // مهم جداً
 use Illuminate\Database\Seeder;
 
 class MoroccoZonesSeeder extends Seeder
 {
     public function run(): void
     {
+        // 1. جلب أول مستخدم موجود، وإذا لم يوجد ننشئ واحد جديد فوراً
+        $user = User::first();
+
+        // تأمين إضافي: إذا لم تجد أي مستخدم، قم بإنشاء واحد افتراضي
+        if (!$user) {
+            $user = User::create([
+                'name' => 'Admin User',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('password'),
+            ]);
+        }
+
         $data = [
             'Tanger-Tétouan-Al Hoceïma' => ['Tanger', 'Tétouan', 'Al Hoceïma', 'Larache', 'Chefchaouen', 'Ouazzane'],
             'L\'Oriental' => ['Oujda', 'Nador', 'Berkane', 'Taourirt', 'Guercif', 'Figuig'],
@@ -26,10 +39,11 @@ class MoroccoZonesSeeder extends Seeder
 
         foreach ($data as $region => $villes) {
             foreach ($villes as $ville) {
+                // استخدام الـ ID الخاص بالمستخدم الذي جلبناه في الخطوة رقم 1
                 Zone::firstOrCreate([
                     'name' => $region,
                     'city' => $ville,
-                    'user_id' => null
+                    'user_id' => $user->id 
                 ]);
             }
         }
