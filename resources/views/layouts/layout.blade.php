@@ -118,14 +118,14 @@
     <div class="p-4 border-b border-white/10 font-bold text-white bg-white/5 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span class="text-xs tracking-wide font-mono text-gray-300">SMART SOL AGENT AI</span>
+            <span class="text-xs tracking-wide font-mono text-gray-300"> <i class="fa-solid fa-robot text-xs text-yellow-400"></i> SMART SOL AGENT AI</span>
         </div>
         <button onclick="toggleChat()" class="text-gray-400 hover:text-white transition-colors text-sm">✕</button>
     </div>
 
     <div id="chat-messages" class="flex-1 p-4 overflow-y-auto text-xs text-gray-200 space-y-4 flex flex-col scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
         <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right break-words" dir="rtl">
-            مرحباً بك! أنا الـ Agent AI ديال SmartSol ☀️. إلا عندك أي سؤال تقني أو مشكل فالسيستم، أنا هنا باش نجاوبك بالدارجة!
+            مرحباً بك! أنا الـ <span class="text-green-400">Agent AI</span> ديال <span class="text-yellow-400">SmartSol</span> . إلا عندك أي سؤال تقني أو مشكل فالسيستم، أنا هنا باش نجاوبك بالدارجة!
         </div>
     </div>
 
@@ -137,7 +137,7 @@
                placeholder="سولني على أي حاجة..." dir="rtl">
         
         <button onclick="sendMessage()" class="bg-blue-600 hover:bg-[#FBB108] hover:text-black p-2.5 rounded-xl text-white font-bold transition-all duration-300 active:scale-95 flex items-center justify-center">
-            🚀
+            <i class="fa-solid fa-paper-plane text-md"></i>
         </button>
     </div>
 </div>
