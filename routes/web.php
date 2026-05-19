@@ -59,8 +59,7 @@ Route::get('/statistiques', [DashboardController::class, 'Statistiques'])
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/analyze-energy', [AssistantAiController::class, 'analyzeEnergy'])->name('analyze.energy');
-
-
-
+    
+    Route::post('/chatbot/message', [AssistantAiController::class, 'chat'])->name('chatbot.message');
 });
 require __DIR__.'/auth.php';

@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Http;
 
 class AssistantAiController extends Controller
 {
+    /**
+     * 1. الفانكشن القديمة ديال زر Lancer Diagnostic (محمية ومقادة)
+     */
     public function analyzeEnergy(Request $request)
     {
         $prod = (float) $request->input('prod');
@@ -17,9 +20,6 @@ class AssistantAiController extends Controller
         $weather = $request->input('weather', 'unknown');
         $hour = (int) now()->format('H'); 
 
-        // ======================
-        // Validation
-        // ======================
         if ($cap <= 0) {
             return response()->json(['error' => 'السعة غير صحيحة'], 400);
         }
@@ -28,9 +28,6 @@ class AssistantAiController extends Controller
             return response()->json(['error' => 'الإنتاج غير صالح'], 400);
         }
 
-        // ======================
-        // Historical Data
-        // ======================
         $panelIds = Panel::where('user_id', Auth::id())->pluck('id');
 
         $history = EnergyData::whereIn('panel_id', $panelIds)
@@ -40,16 +37,10 @@ class AssistantAiController extends Controller
 
         $avg = $history->count() > 0 ? $history->avg() : $prod;
 
-        // ======================
-        // Efficiency
-        // ======================
         $currentEfficiency = ($prod / $cap) * 100;
         $currentEfficiency = max(0, min(100, $currentEfficiency));
         $eff = round($currentEfficiency, 2);
 
-        // ======================
-        // Status Logic
-        // ======================
         if ($eff < 20) {
             $status = 'critical_low';
         } elseif ($eff < 50) {
@@ -60,28 +51,19 @@ class AssistantAiController extends Controller
             $status = 'normal';
         }
 
-        // ======================
-        // Trend
-        // ======================
         $diff = $prod - $avg;
         $trend = $diff >= 0 ? "تحسن" : "تراجع";
 
-        // ======================
-        // API Key
-        // ======================
         $apiKey = config('services.groq.api_key');
 
         if (!$apiKey) {
-            return response()->json(['error' => 'API KEY ناقص'], 500);
+            return response()->json(['error' => 'API KEY ناقص فـ configuration'], 500);
         }
 
-        // ======================
-        // Groq API Call
-        // ======================
         try {
             $response = Http::withToken($apiKey)
                 ->post('https://api.groq.com/openai/v1/chat/completions', [
-                    'model' => 'llama-3.1-8b-instant',
+                    'model' => 'llama-3.1-8b-instant', // الموديل الصحيح والسرير
                     'messages' => [
                         [
                             'role' => 'system', 
@@ -91,9 +73,9 @@ class AssistantAiController extends Controller
                             
                             قواعد صارمة للإجابة:
                             1. جاوب بجملة واحدة قصيرة ومباشرة ومفيدة (Short and punchy).
-                            2. ممنوع ذكر الأرقام الطويلة أو الحسابات المعقدة (مثلا بدلا من 1.01% قل 1%).
+                            2. ممنوع ذكر الأرقام الطويلة أو الحسابات المعقدة.
                             3. إذا كان الوقت ليلاً (بين 20 و 06): قل 'السيستيم دابا فوضع راحة، نتلاقاو غدا مع الشمش إن شاء الله.'
-                            4. إذا كان الوقت نهاراً والكفاءة أقل من 15%: ركز على أن هناك خلل أو غبار على الألواح (مثال: 'كاين خلل، غالبا البانوات فيهم الغبار خاصهم يتمسحو')."
+                            4. إذا كان الوقت نهاراً والكفاءة أقل من 15%: ركز على أن هناك خلل أو غبار على الألواح."
                         ],
                         [
                             'role' => 'user', 
@@ -102,7 +84,7 @@ class AssistantAiController extends Controller
                             - الإنتاج الحالي: {$prod} Watts
                             - الكفاءة الحالية: {$eff}%
                             - حالة السيستيم: {$status}
-                            - المنحنى مقارنة بالمعدل: {$trend} (المعدل هو: " . round($avg, 2) . "W)
+                            - المنحنى مقارنة بالمعدل: {$trend}
                             - الطقس: {$weather}
                             
                             عطيني تحليل سريع ونصيحة بالدارجة المغربية."
@@ -119,9 +101,6 @@ class AssistantAiController extends Controller
                 ], 500);
             }
 
-            // ======================
-            // Response
-            // ======================
             return response()->json([
                 'analysis' => trim($response['choices'][0]['message']['content']),
                 'efficiency' => $eff,
@@ -137,6 +116,60 @@ class AssistantAiController extends Controller
                 'error' => 'حدث خطأ غير متوقع',
                 'details' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * 2. الفانكشن الجديدة والـ مْحَرّْشَة ديال الـ Chatbot التقني (بلا IoT وبنفس الـ API Key الناجح)
+     */
+    public function chat(Request $request)
+    {
+        $userMessage = $request->input('message');
+
+        if (!$userMessage) {
+            return response()->json(['reply' => 'صيفط شي ميساج أولا!']);
+        }
+
+        $apiKey = config('services.groq.api_key');
+
+        if (!$apiKey) {
+            return response()->json(['reply' => 'سْمْح ليا، الـ API Key ناقص فالسيستم، تأكد من ملف .env!']);
+        }
+
+        // Prompt محرررشششش خاص بالدعم التقني والأعطال وصيانة الـ Panels والـ Inverters
+        $systemPrompt = "أنت عبارة عن 'Agent AI' خبير تقني مْحَرّْشْ ومطور جداً مخصص لأنظمة الطاقة الشمسية لسيستم اسمه 'SmartSol'.\n"
+            . "مهمتك الأساسية هي الدردشة مع المستخدم، ومساعدته في تشخيص الأعطال التقنية والاستشارات (Dépannage & Assistance).\n\n"
+            . "قواعد الإجابة الصارمة:\n"
+            . "1. تحدث بالدارجة المغربية القحة (Moroccan Darija) بأسلوب ودّي، مهني، وتقني مبسط ومفهوم (ممنوع الفصحى الجافة وممنوع الكلمات الشرقية أو المصرية مثل 'مش' أو 'عشان').\n"
+            . "2. عندما يطرح المستخدم أي مشكل تقني أو عطل، قم بتحليله فوراً واقترح:\n"
+            . "   - سيناريوهات الأعطال الممكنة (Scénarios de panne possibles).\n"
+            . "   - الأسباب المحتملة (Les causes).\n"
+            . "   - الحلول التقنية والخطوات العملية الواضحة لإصلاح المشكل (Solutions techniques).\n"
+            . "3. لا تذكر أي أرقام حية عن إنتاج اللوحات الحالي لأنك شات بوت مخصص للدعم والاستشارة والتحليل الفني فقط.\n"
+            . "4. خلي الأجوبة ملوّزة، واضحة، ومباشرة بلا بلا بلا خاوي.";
+
+        try {
+            // صيفطنا الطلب بنفس الموديل الخفيف والسريع
+            $response = Http::withToken($apiKey)
+                ->post('https://api.groq.com/openai/v1/chat/completions', [
+                    'model' => 'llama-3.1-8b-instant',
+                    'messages' => [
+                        ['role' => 'system', 'content' => $systemPrompt],
+                        ['role' => 'user', 'content' => $userMessage],
+                    ],
+                    'temperature' => 0.5, // عطيناه شوية المرونة فالدردشة مقارنة بالدياغنوستيك
+                    'max_tokens' => 400
+                ]);
+
+            if (!$response->successful()) {
+                return response()->json(['reply' => 'سْمْح ليا، وقع عطل فالاتصال بـ Groq API. هاهو الـ Debug: ' . $response->json()['error']['message'] ?? $response->body()]);
+            }
+
+            $botReply = $response['choices'][0]['message']['content'] ?? 'الرد رجع خاوي، عاود صيفط الميساج.';
+            return response()->json(['reply' => trim($botReply)]);
+
+        } catch (\Exception $e) {
+            return response()->json(['reply' => 'عْيِيتْ شوية دابا، وقع خطأ فالسيرفر: ' . $e->getMessage()]);
         }
     }
 }

@@ -9,134 +9,66 @@ use Illuminate\Support\Facades\Log;
 
 class ChatbotController extends Controller
 {
-    private string $groqUrl = 'https://api.groq.com/openai/v1/chat/completions';
-
-    public function ask(Request $request): JsonResponse
+    public function chat(Request $request)
     {
-        $request->validate([
-            'message'         => 'required|string|max:1000',
-            'production_kwh'  => 'nullable|numeric|min:0',
-            'consumption_kwh' => 'nullable|numeric|min:0',
-            'weather'         => 'nullable|string|in:sunny,cloudy,rainy,partly_cloudy',
-        ]);
+        $userMessage = $request->input('message');
 
-        $systemPrompt = $this->buildSystemPrompt(
-            $request->production_kwh,
-            $request->consumption_kwh,
-            $request->weather
-        );
+        if (!$userMessage) {
+            return response()->json(['reply' => 'صيفط شي ميساج أولا!']);
+        }
+
+        // قراءة الـ API Key مباشرة من الـ .env لتفادي مشاكل الـ Cache
+        $apiKey = env('GROQ_API_KEY');
+
+        if (!$apiKey) {
+            return response()->json(['reply' => 'سْمْح ليا، الـ API Key ناقص فالسيستم، تأكد من ملف .env!']);
+        }
+
+        // الـ Prompt مركز فقط على التحليل التقني والأعطال والصيانة بالدارجة المغربية
+        $systemPrompt = "أنت عبارة عن 'Agent AI' خبير تقني مغربي نَاضِي ومطور مخصص لأنظمة الطاقة الشمسية لسيستم اسمه 'SmartSol'.\n"
+    . "مهمتك الأساسية هي الدردشة مع المستخدم بالدارجة المغربية القحة (Moroccan Darija) فقط وفقط، ومساعدته في تشخيص الأعطال والاستشارات التقنية (Dépannage).\n\n"
+    . "قواعد صارمة ومقدسة للإجابة (إلى خالفتيها غاتخسر السيستيم):\n"
+    . "1. ممنوع منعا كلياً ومطلقاً استعمال الكلمات المشرقية، الخليجية، أو اللبنانية (مثل: كيفك، حبيبي، يا رجل، شو، مش، عشان، هدا).\n"
+    . "2. ممنوع استعمال اللغة العربية الفصحى الجافة في الترحيب أو الهضرة (مثل: أهلاً بك، يرجى، ما مشكلتك).\n"
+    . "3. إذا صيفط ليك المستخدم سلام أو ترحيب، جاوبو فوراً بالدارجة المغربية التقنية وبأدب مغربي، بحال هكا:\n"
+    . "   - 'وعليكم السلام! مرحبا بيك، أنا الـ Agent AI ديالك. إلا عندك أي مشكل فالـ Onduleur أو البانوات، قوليا شنو كاين ونعاونك تفرز المشكل.'\n"
+    . "4. عند تشخيص أي عطل، قسم جوابك بنقاط مباشرة (المشكل، الأسباب، والحلول العملية) بلا تطويل.\n"
+    . "5. استعمل ديما المصطلحات التقنية المغربية: البانوات، الانفرتر، الكابلاج، السيركوي، الشارج، الغبار.\n\n"
+    . "هاك أمثلة حقيقية لأسلوبك الحتمي:\n"
+    . "المستخدم: salam\n"
+    . "أنت: وعليكم السلام وخا معندناش الشمش دابا حيت السيستيم فوضع راحة! هانيا، قولي أشنو المشكل التقني لي عندك فالسيستيم باش نعاونك؟\n\n"
+    . "المستخدم: البانوات مابغاووش يشارجيوا\n"
+    . "أنت: هاد البلان يقدر يكون بسباب بزاف د الحوايج: أولا، شوف واش كاين الغبار بزاف فوق البانوات خاصهم يتمسحو. ثانيا، قلب الكابلاج واش شي خيط مرخوف من جيهة الـ Onduleur. جرب هادو ورد عليا.";
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('GROQ_API_KEY'),
-                'Content-Type'  => 'application/json',
-            ])->timeout(30)->post($this->groqUrl, [
-                'model'       => env('GROQ_MODEL', 'llama3-8b-8192'),
-                'max_tokens'  => 400,
-                'temperature' => 0.6,
-                'messages'    => [
-                    ['role' => 'system', 'content' => $systemPrompt],
-                    ['role' => 'user',   'content' => $request->message],
-                ],
-            ]);
-
-            // ── DEBUG (retire après fix) ──────────────────────────────────
-            Log::info('GROQ_STATUS', ['code' => $response->status()]);
-            Log::info('GROQ_BODY',   ['body' => $response->body()]);
-            // ─────────────────────────────────────────────────────────────
-
-            if ($response->failed()) {
-                Log::error('Groq API failed', [
-                    'status' => $response->status(),
-                    'body'   => $response->body(),
+            // الاتصال بـ Groq باستعمال الـ Token والموديل الصحيح الشغال
+            $response = Http::withToken($apiKey)
+                ->post('https://api.groq.com/openai/v1/chat/completions', [
+                    'model' => 'llama-3.1-8b-instant', // الموديل الناجح والسريع
+                    'messages' => [
+                        ['role' => 'system', 'content' => $systemPrompt],
+                        ['role' => 'user', 'content' => $userMessage],
+                    ],
+                    'temperature' => 0.3,
+                    'max_tokens' => 400
                 ]);
 
-                return response()->json([
-                    'answer' => 'عفواً، وقع مشكل مع الخادم. عاود المحاولة من بعد شوية. 🔧',
-                    'error'  => true,
-                ], 200);
+            // تشخيص الخطأ وإظهاره فوراً في الشات إن وجد من جهة الـ API
+            if (!$response->successful()) {
+                $errorData = $response->json();
+                $errorMessage = $errorData['error']['message'] ?? $response->body();
+                return response()->json(['reply' => 'سْمْح ليا، وقع مشكل فـ Groq API: ' . $errorMessage]);
             }
 
-            $answer = $response->json('choices.0.message.content', 'ما قدرتش نفهم الجواب.');
+            $data = $response->json();
+            $botReply = $data['choices'][0]['message']['content'] ?? 'الرد رجع خاوي، عاود صيفط الميساج.';
 
-            return response()->json([
-                'answer' => trim($answer),
-                'error'  => false,
-                'meta'   => [
-                    'production_kwh'  => $request->production_kwh,
-                    'consumption_kwh' => $request->consumption_kwh,
-                    'weather'         => $request->weather,
-                    'deficit'         => $this->calcDeficit(
-                        $request->production_kwh,
-                        $request->consumption_kwh
-                    ),
-                ],
-            ]);
+            return response()->json(['reply' => trim($botReply)]);
 
         } catch (\Exception $e) {
-            Log::error('Chatbot exception', [
-                'message' => $e->getMessage(),
-                'line'    => $e->getLine(),
-                'file'    => $e->getFile(),
-            ]);
-
-            return response()->json([
-                'answer' => 'وقع خطأ تقني: ' . $e->getMessage(),
-                'error'  => true,
-            ], 200);
+            // تسجيل الخطأ في الـ Logs وقراءته
+            Log::error('Chatbot Error: ' . $e->getMessage());
+            return response()->json(['reply' => 'السيستم غير متاح حالياً، وقع خطأ: ' . $e->getMessage()], 500);
         }
-    }
-
-    // ─── Helpers ──────────────────────────────────────────────────────────────
-
-    private function buildSystemPrompt(
-        ?float $production,
-        ?float $consumption,
-        ?string $weather
-    ): string {
-        $context = '';
-
-        if ($production !== null && $consumption !== null) {
-            $deficit    = $production - $consumption;
-            $efficiency = $production > 0
-                ? round(($production / max($consumption, 1)) * 100, 1)
-                : 0;
-            $status = $deficit >= 0 ? 'فائض' : 'عجز';
-
-            $context = <<<EOT
-
-=== بيانات النظام الحالية ===
-- الإنتاج: {$production} kWh
-- الاستهلاك: {$consumption} kWh
-- الفرق ({$status}): {$deficit} kWh
-- نسبة الكفاءة: {$efficiency}%
-- حالة الطقس: {$weather}
-EOT;
-        }
-
-        return <<<EOT
-أنت SolarBot، خبير ذكي في أنظمة الطاقة الشمسية. تتحدث بالدارجة المغربية فقط.
-أسلوبك: تقني لكن بسيط، منظم ومختصر.
-
-مهمتك:
-- تحلل الإنتاج مقارنة بالاستهلاك
-- تكتشف مشاكل الإنتاج الضعيف
-- تشرح تأثير الطقس (شمس / غيوم / مطر)
-- تعطي توصيات عملية لتحسين الكفاءة
-- تقدم تحليل يومي أو أسبوعي عند الطلب
-
-قواعد الجواب:
-- استخدم الإيموجي بشكل معقول (🔴🟡🟢☀️☁️🌧️⚡)
-- رتب الجواب: تشخيص ← سبب ← توصية
-- أقصى 5 أسطر
-- لا تتكلم إلا بالدارجة المغربية
-{$context}
-EOT;
-    }
-
-    private function calcDeficit(?float $production, ?float $consumption): ?float
-    {
-        if ($production === null || $consumption === null) return null;
-        return round($production - $consumption, 2);
     }
 }

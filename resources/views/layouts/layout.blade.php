@@ -106,41 +106,41 @@
 <button onclick="toggleChat()" id="chat-toggle-btn" 
     class="fixed bottom-8 right-8 w-16 h-16 bg-[#1a1a1a]/60 backdrop-blur-xl border border-blue-500/30 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] hover:border-[#FBB108] transition-all duration-500 flex items-center justify-center group z-50">
     
-    <!-- Animated Blue Pulse (Zre9) -->
     <div class="absolute inset-0 rounded-2xl bg-blue-600 opacity-20 animate-pulse group-hover:opacity-40 transition-opacity"></div>
     
-    <!-- Yellow Glow on Hover (Sfer) -->
     <div class="absolute inset-0 rounded-2xl bg-[#FBB108] opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></div>
     
-    <!-- Icon (Yellow to Blue transition) -->
     <i class="fa-brands fa-bots text-[#FBB108] text-3xl group-hover:text-blue-400 group-hover:scale-110 transition-all duration-300 relative z-10"></i>
 </button>
 
-<div id="chat-window" class="fixed bottom-20 right-5 w-80 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl hidden flex-col h-[450px] z-50 overflow-hidden animate-fade-in-up">
+<div id="chat-window" class="fixed bottom-24 right-8 w-[380px] max-w-[calc(100vw-2rem)] bg-[#111111]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl hidden flex-col h-[500px] z-50 overflow-hidden transition-all duration-300">
     
-    <div class="p-4 border-b border-white/10 font-bold text-white bg-white/5 flex justify-between items-center">
-        <span>🤖 SmartSol Chatbot</span>
-        <button onclick="toggleChat()" class="text-gray-400 hover:text-white">✕</button>
+    <div class="p-4 border-b border-white/10 font-bold text-white bg-white/5 flex justify-between items-center shrink-0">
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span class="text-xs tracking-wide font-mono text-gray-300">SMART SOL AGENT AI</span>
+        </div>
+        <button onclick="toggleChat()" class="text-gray-400 hover:text-white transition-colors text-sm">✕</button>
     </div>
 
-    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto text-sm text-gray-200 space-y-4 scrollbar-thin scrollbar-thumb-white/20">
-        <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none">
-            hi 
-    </div>
+    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto text-xs text-gray-200 space-y-4 flex flex-col scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+        <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right break-words" dir="rtl">
+            مرحباً بك! أنا الـ Agent AI ديال SmartSol ☀️. إلا عندك أي سؤال تقني أو مشكل فالسيستم، أنا هنا باش نجاوبك بالدارجة!
+        </div>
     </div>
 
-    <div class="p-3 bg-white/5 border-t border-white/10 flex gap-2">
+    <div class="p-3 bg-black/40 border-t border-white/10 flex gap-2 shrink-0">
         <input id="user-input" 
                type="text" 
                onkeypress="if(event.key === 'Enter') sendMessage()"
-               class="flex-1 bg-black/40 border border-white/10 rounded-xl text-white p-2 text-xs focus:outline-none focus:border-blue-500 transition-colors" 
-               placeholder="سولني على الطاقة...">
+               class="flex-1 bg-black/60 border border-white/10 rounded-xl text-white p-2.5 text-xs focus:outline-none focus:border-[#FBB108] transition-colors text-right" 
+               placeholder="سولني على أي حاجة..." dir="rtl">
         
-        <button onclick="sendMessage()" class="bg-blue-600 hover:bg-blue-500 p-2 rounded-xl text-white transition-transform active:scale-95">
+        <button onclick="sendMessage()" class="bg-blue-600 hover:bg-[#FBB108] hover:text-black p-2.5 rounded-xl text-white font-bold transition-all duration-300 active:scale-95 flex items-center justify-center">
             🚀
         </button>
     </div>
-            </div>
+</div>
         </header>
         <!-- navbar end -->
         
@@ -198,6 +198,85 @@
             closeLogoutModal();
         }
     }
+// Function لفتح وإغلاق الشات
+function toggleChat() {
+    const chatWindow = document.getElementById('chat-window');
+    if (chatWindow.classList.contains('hidden')) {
+        chatWindow.classList.remove('hidden');
+        chatWindow.classList.add('flex');
+    } else {
+        chatWindow.classList.remove('flex');
+        chatWindow.classList.add('hidden');
+    }
+}
+function sendMessage() {
+    const inputEl = document.getElementById('user-input');
+    const chatMessages = document.getElementById('chat-messages');
+    const message = inputEl.value.trim();
+
+    if (!message) return;
+
+    // 1. عرض ميساج المستخدم (نقي ومجموع ف الجنب)
+    chatMessages.innerHTML += `
+        <div class="bg-blue-600/10 border border-blue-500/20 text-blue-300 p-3 rounded-2xl rounded-tr-none max-w-[85%] self-end text-right text-xs break-words" dir="rtl">
+            ${message}
+        </div>
+    `;
+    
+    inputEl.value = '';
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // 2. تأثير الانتظار والتحليل
+    const typingId = 'typing-' + Date.now();
+    chatMessages.innerHTML += `
+        <div id="${typingId}" class="bg-white/5 border border-white/5 text-gray-400 p-3 rounded-2xl rounded-tl-none max-w-[50%] self-start text-right text-xs animate-pulse" dir="rtl">
+            جاري فحص العطل... ⏳
+        </div>
+    `;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // 3. الاتصال بالـ Controller
+    fetch("{{ route('chatbot.message') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Network error');
+        return res.json();
+    })
+    .then(data => {
+        document.getElementById(typingId).remove();
+
+        // فورماتينغ سريع باش يرجع النجمات (**) لـ Bold تاقات نقيين
+        let formattedReply = data.reply.replace(/\*\*(.*?)\*\*/g, '<strong class="text-[#FBB108] font-bold">$1</strong>');
+        // تعويض السطور الجديدة لـ <br> باش يجي داكشي منظم سطر بسطر
+        formattedReply = formattedReply.replace(/\n/g, '<br>');
+
+        // 4. عرض جواب الـ Agent AI المغربي
+        chatMessages.innerHTML += `
+            <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs leading-relaxed break-words text-gray-200" dir="rtl">
+                ${formattedReply}
+            </div>
+        `;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    })
+    .catch(err => {
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+        
+        chatMessages.innerHTML += `
+            <div class="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs" dir="rtl">
+                سْمْح ليا، وقع عطل تقني فالسيرفر. عاود صيفط الميساج!
+            </div>
+        `;
+        console.error(err);
+    });
+}
+
 </script>
 </body>
 </html>
