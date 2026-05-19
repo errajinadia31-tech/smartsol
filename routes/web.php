@@ -60,6 +60,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/analyze-energy', [AssistantAiController::class, 'analyzeEnergy'])->name('analyze.energy');
     
-    Route::post('/chatbot/message', [AssistantAiController::class, 'chat'])->name('chatbot.message');
+    Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.message');
 });
 require __DIR__.'/auth.php';

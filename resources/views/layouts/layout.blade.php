@@ -21,6 +21,28 @@
         .nav-link:hover { background: rgba(255,255,255,0.1); border-color: #FBB108; }
         .active-nav { background: white !important; color: black !important; font-weight: 700; border-color: white; }
     </style>
+    <style>
+    /* تخصيص الـ Scrollbar لكونتينر الميساجات فقط */
+    #chat-messages::-webkit-scrollbar {
+        width: 6px; /* السمك ديالو رقيق بزاف */
+    }
+
+    /* الخلفية ديال المجرى (Track) شفاف باش يبان الـ Glassmorphism */
+    #chat-messages::-webkit-scrollbar-track {
+        background: transparent; 
+    }
+
+    /* العجلة أو المقبض اللي كيتحرك (Thumb) */
+    #chat-messages::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1); /* لـون أبيض شفاف خفيف */
+        border-radius: 9999px; /* دائري من الجناب */
+    }
+
+    /* فاش يحط المستخدم عليه الفأرة (Hover) كيتحول للذهبي */
+    #chat-messages::-webkit-scrollbar-thumb:hover {
+        background: rgba(251, 177, 8, 0.4); 
+    }
+</style>
 </head>
 
 <body class="bg-cover bg-center h-screen bg-[url('{{ asset("images/dashboard_bg.jpeg") }}')] ">
@@ -230,7 +252,7 @@ function sendMessage() {
     const typingId = 'typing-' + Date.now();
     chatMessages.innerHTML += `
         <div id="${typingId}" class="bg-white/5 border border-white/5 text-gray-400 p-3 rounded-2xl rounded-tl-none max-w-[50%] self-start text-right text-xs animate-pulse" dir="rtl">
-            جاري فحص العطل... ⏳
+          ... جاري الرد⏳
         </div>
     `;
     chatMessages.scrollTop = chatMessages.scrollHeight;
