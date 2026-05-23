@@ -187,18 +187,17 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script>
-    // 1. تعريف المتغير global باش نقدروا نوصلو للـ Chart فالدوال كاملة
     let energyChart;
 
     document.addEventListener('DOMContentLoaded', function () {
-        // تجهيز الداتا الأولية
+        // 1. تجهيز الداتا الأولية من Laravel
         const labels = @json($latestReadings->pluck('created_at')->map(fn($d) => \Carbon\Carbon::parse($d)->format('H:i')));
         const prodData = @json($latestReadings->pluck('power'));
         const consData = @json($latestReadings->pluck('consumption'));
 
         const ctx = document.getElementById('energyChart').getContext('2d');
 
-        // إعداد الـ Chart بـ 2 Datasets
+        // 2. إعداد الـ Chart
         energyChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -215,7 +214,7 @@
                     {
                         label: 'Consommation',
                         data: consData,
-                        borderColor: '#3B82F6', // لون أزرق للاستهلاك
+                        borderColor: '#3B82F6',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         fill: true,
                         tension: 0.4
@@ -225,7 +224,7 @@
             options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // كود الـ AI
+        // 3. كود الـ AI
         const btn = document.getElementById('ai-btn');
         const output = document.getElementById('ai-response');
 
@@ -254,65 +253,50 @@
             btn.innerText = "Lancer Diagnostic";
             btn.disabled = false;
         });
+
+        // 4. دالة التحديث (Simulation)
+        function refreshSimulation() {
+            fetch('{{ route("simulation.data") }}')
+                .then(response => response.json())
+                .then(data => {
+                    // تحديث القيم فالبطاقات مع transition سلس
+                    document.getElementById('live-power').innerText = data.production;
+                    document.getElementById('live-consumption').innerText = data.consumption;
+
+                    // تحديث أيقونة الطقس
+                    const weatherSpan = document.getElementById('weather-status');
+                    if (!data.isDay) {
+                        weatherSpan.innerHTML = '<i class="fa-solid fa-moon text-blue-300"></i>';
+                    } else if (data.cloudiness > 70) {
+                        weatherSpan.innerHTML = '<i class="fa-solid fa-cloud text-gray-400"></i>';
+                    } else {
+                        weatherSpan.innerHTML = '<i class="fa-solid fa-sun text-yellow-500"></i>';
+                    }
+
+                    // تحديث المبيان
+                    updateChart(data.production, data.consumption, data.timestamp);
+                });
+        }
+
+        // تحديث كل ثانيتين
+        setInterval(refreshSimulation, 2000);
     });
 
-    // دالة التحديث اللي كتجيب الداتا من السيرفر
-function refreshSimulation() {
-    fetch('{{ route("simulation.data") }}')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('live-power').innerText = data.production;
-            document.getElementById('live-consumption').innerText = data.consumption;
-
-            // تحديث أيقونة الطقس
-            const weatherSpan = document.getElementById('weather-status');
-            if (!data.isDay) {
-                weatherSpan.innerHTML = '<i class="fa-solid fa-moon text-blue-300"></i>';
-            } else if (data.cloudiness > 70) {
-                weatherSpan.innerHTML = '<i class="fa-solid fa-cloud text-gray-400"></i>';
-            } else {
-                weatherSpan.innerHTML = '<i class="fa-solid fa-sun text-yellow-500"></i>';
-            }
-
-            updateChart(data.production, data.consumption, data.timestamp);
-        });
-}       
- fetch('{{ route("simulation.data") }}')
-            .then(response => response.json())
-            .then(data => {
-                // تحديث البطاقات
-                document.getElementById('live-power').innerText = data.production;
-                document.getElementById('live-consumption').innerText = data.consumption;
-
-                // تحديث الـ Chart
-                updateChart(data.production, data.consumption, data.timestamp);
-            });
-    
-if (data.isDay && data.production == 0) {
-    addAlert("الإنتاج متوقف! تأكد من الألواح.");
-}if (data.consumption > (data.production * 1.5)) {
-    addAlert("الاستهلاك طالع بزاف مقارنة بالإنتاج!");
-}
-    // تحديث كل 2 ثانية
-    setInterval(refreshSimulation, 2000);
-
-    // الدالة اللي كتحدث الـ Chart
+    // دالة تحديث المبيان
     function updateChart(prod, cons, time) {
         if (!energyChart) return;
 
-        // دفع الداتا الجديدة
         energyChart.data.labels.push(time);
         energyChart.data.datasets[0].data.push(prod);
         energyChart.data.datasets[1].data.push(cons);
 
-        // الحفاظ على آخر 13 قراءة فقط
         if (energyChart.data.labels.length > 13) {
             energyChart.data.labels.shift();
             energyChart.data.datasets[0].data.shift();
             energyChart.data.datasets[1].data.shift();
         }
         
-        energyChart.update();
+        energyChart.update('none'); // تحديث بدون animation ثقيل
     }
 </script>
 @endsection

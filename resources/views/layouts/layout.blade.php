@@ -60,6 +60,7 @@
                 <a href="{{ route('panels.index') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('panels.index') ? 'active-nav' : '' }}">Panneaux</a>
                 <a href="{{ route('statistiques') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('statistiques') ? 'active-nav' : '' }}">Statistiques</a>
                 <a href="{{ route('rapport') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('rapport')? 'active-nav' : '' }}">Rapports</a>
+                <a href="{{ route('companies') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('companies')? 'active-nav' : '' }}">Maintenance</a>
             </nav>
 
             <div class="flex items-center gap-3">
@@ -203,7 +204,7 @@
     function toggleProfileMenu(event) {
         event.stopPropagation();
         const menu = document.getElementById('profileMenu');
-        const alertsMenu = document.getElementById('alerts-list'); // تأمين إغلاق التنبيهات
+        const alertsMenu = document.getElementById('alerts-list');
         alertsMenu.classList.add('hidden');
         menu.classList.toggle('hidden');
     }
@@ -228,84 +229,83 @@
         }, 150);
     }
 
-    // --- منطق الشات ---
+    // --- منطق الشات والذكاء الاصطناعي ---
     function toggleChat() {
         const chatWindow = document.getElementById('chat-window');
-        if (chatWindow.classList.contains('hidden')) {
-            chatWindow.classList.remove('hidden');
-            chatWindow.classList.add('flex');
-        } else {
-            chatWindow.classList.remove('flex');
-            chatWindow.classList.add('hidden');
-        }
+        chatWindow.classList.toggle('hidden');
+        chatWindow.classList.toggle('flex');
     }
 
+    // 1. إرسال رسالة عادية للـ Chatbot
     function sendMessage() {
         const inputEl = document.getElementById('user-input');
         const chatMessages = document.getElementById('chat-messages');
         const message = inputEl.value.trim();
-
         if (!message) return;
 
-        chatMessages.innerHTML += `
-            <div class="bg-blue-600/10 border border-blue-500/20 text-blue-300 p-3 rounded-2xl rounded-tr-none max-w-[85%] self-end text-right text-xs break-words" dir="rtl">
-                ${message}
-            </div>
-        `;
+        chatMessages.innerHTML += `<div class="bg-blue-600/10 border border-blue-500/20 text-blue-300 p-3 rounded-2xl rounded-tr-none max-w-[85%] self-end text-right text-xs break-words" dir="rtl">${message}</div>`;
         inputEl.value = '';
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
         const typingId = 'typing-' + Date.now();
-        chatMessages.innerHTML += `
-            <div id="${typingId}" class="bg-white/5 border border-white/5 text-gray-400 p-3 rounded-2xl rounded-tl-none max-w-[50%] self-start text-right text-xs animate-pulse" dir="rtl">
-              ... جاري الرد⏳
-            </div>
-        `;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-
+        chatMessages.innerHTML += `<div id="${typingId}" class="bg-white/5 p-3 rounded-2xl rounded-tl-none text-gray-400 text-xs animate-pulse">... جاري الرد</div>`;
+        
         fetch("{{ route('chatbot.message') }}", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
+            headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": "{{ csrf_token() }}" },
             body: JSON.stringify({ message: message })
         })
         .then(res => res.json())
         .then(data => {
             document.getElementById(typingId).remove();
-            let formattedReply = data.reply.replace(/\*\*(.*?)\*\*/g, '<strong class="text-[#FBB108] font-bold">$1</strong>').replace(/\n/g, '<br>');
-            chatMessages.innerHTML += `
-                <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs leading-relaxed break-words text-gray-200" dir="rtl">
-                    ${formattedReply}
-                </div>
-            `;
+            let formattedReply = data.reply.replace(/\*\*(.*?)\*\*/g, '<strong class="text-[#FBB108]">$1</strong>').replace(/\n/g, '<br>');
+            chatMessages.innerHTML += `<div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs text-gray-200" dir="rtl">${formattedReply}</div>`;
             chatMessages.scrollTop = chatMessages.scrollHeight;
-        })
-        .catch(err => {
-            document.getElementById(typingId)?.remove();
-            chatMessages.innerHTML += `<div class="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs" dir="rtl">عذراً، حدث خطأ تقني.</div>`;
         });
     }
 
-    // --- منطق التنبيهات (Alerts) المدمج ---
+    // 2. منطق التحليل الذكي للطاقة (الـ AI Diagnostic)
+    async function requestEnergyAnalysis() {
+        const chatMessages = document.getElementById('chat-messages');
+        const typingId = 'typing-' + Date.now();
+        
+        chatMessages.innerHTML += `<div id="${typingId}" class="bg-yellow-600/10 border border-yellow-500/20 p-3 rounded-2xl rounded-tl-none text-yellow-500 text-xs animate-pulse">جاري تحليل بيانات النظام...</div>`;
+        
+        const prod = document.getElementById('live-power')?.innerText || 0;
+        const cap = document.getElementById('total-cap')?.innerText || 0;
+        const weather = "نسبة السحب " + (document.getElementById('cloud-value')?.innerText || 0) + "%";
+
+        fetch("/analyze-energy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": "{{ csrf_token() }}" },
+            body: JSON.stringify({ prod, cap, weather })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById(typingId).remove();
+            chatMessages.innerHTML += `
+                <div class="bg-yellow-600/10 border border-yellow-500/20 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs text-yellow-100" dir="rtl">
+                    🤖 <strong>تحليل ذكي:</strong> ${data.analysis}
+                </div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        })
+        .catch(() => {
+            document.getElementById(typingId).remove();
+            chatMessages.innerHTML += `<div class="text-red-400 text-xs p-3">حدث خطأ في الاتصال بالمحلل.</div>`;
+        });
+    }
+
+    // --- منطق التنبيهات ---
     const bellBtn = document.getElementById('bell-btn');
     const alertsList = document.getElementById('alerts-list');
-    const alertBadge = document.getElementById('alert-badge');
-
+    
     bellBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        document.getElementById('profileMenu').classList.add('hidden'); // إغلاق البروفايل إيلا كان مفتوح
+        document.getElementById('profileMenu').classList.add('hidden');
         alertsList.classList.toggle('hidden');
     });
 
-    function addAlert(message) {
-        if(alertsList.querySelector('p')) alertsList.innerHTML = '';
-        alertsList.innerHTML += `<div class="text-red-400 text-xs border-b border-white/5 pb-2">⚠️ ${message}</div>`;
-        alertBadge.classList.remove('hidden');
-    }
-
-    // --- المنسق العام للنقرات ---
+    // --- المنسق العام ---
     window.onclick = function(event) {
         const menu = document.getElementById('profileMenu');
         const modal = document.getElementById('logout-modal');
@@ -313,7 +313,6 @@
         
         if (!menu.contains(event.target)) menu.classList.add('hidden');
         if (!alertsList.contains(event.target) && event.target !== bellBtn) alertsList.classList.add('hidden');
-        
         if (event.target == modal) closeLogoutModal();
     }
 </script>

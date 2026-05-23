@@ -65,4 +65,9 @@ Route::middleware(['auth'])->group(function () {
 });
 Route::get('/dashboard/data', [DashboardController::class, 'getDashboardData'])->name('dashboard.data');
 Route::get('/dashboard/simulation', [DashboardController::class, 'getSimulationData'])->name('simulation.data');
+
+Route::get('/companies', function () {
+    return view('companies.companie');
+})->name('companies');
+
 require __DIR__.'/auth.php';
