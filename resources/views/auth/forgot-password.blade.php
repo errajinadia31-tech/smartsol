@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>EnerSol - Récupération</title>
+    <title>SmartSol - Récupération</title>
     <link rel="shortcut icon" href="{{asset('images/logo.png')}}" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,7 +35,7 @@
         
         <div class="flex flex-col items-center mb-6 text-center">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10 mb-2 object-contain">
-            <h1 class="font-bold text-xl md:text-2xl tracking-tighter uppercase italic">Ener<span class="text-[#FBB108]">Sol</span></h1>
+            <h1 class="font-bold text-xl md:text-2xl tracking-tighter uppercase italic">Smart<span class="text-[#FBB108]">Sol</span></h1>
             <p class="text-white/50 text-[9px] uppercase tracking-[0.2em] mt-1">Réinitialisation</p>
         </div>
 

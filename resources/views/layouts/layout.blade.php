@@ -63,13 +63,30 @@
             </nav>
 
             <div class="flex items-center gap-3">
-                <div class="flex items-center border-r border-white/10 pr-4 gap-2">
-                   
-                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-[#FBB108] hover:text-black transition relative">
-                        <i class="fa-regular fa-bell text-xs"></i>
-                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-black"></span>
-                    </button>
+              <!-- Notification Dropdown -->
+<!-- Notification Dropdown -->
+<div class="relative">
+    <button id="bell-btn" class="text-gray-300 hover:text-yellow-500 transition-all">
+        <i class="fa-regular fa-bell text-xl"></i>
+        <span id="alert-badge" class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full hidden"></span>
+    </button>
+
+    <!-- هنا التعديل: ضفنا absolute، bg، و shadow باش يبان بحال القائمة -->
+    <div id="alerts-list" class="hidden absolute right-0 mt-3 w-72 bg-[#121212]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-4 z-50">
+        <div class="text-sm font-bold text-white mb-3 border-b border-white/5 pb-2">التنبيهات</div>
+        
+        <div id="alerts-container" class="space-y-3">
+            @forelse($notifications as $notif)
+                <div class="text-red-400 text-xs border-b border-white/5 pb-2 flex justify-between">
+                    <span>⚠️ {{ $notif->message }}</span>
+                    <span class="text-[9px] text-gray-500">{{ $notif->created_at->diffForHumans() }}</span>
                 </div>
+            @empty
+                <p class="text-gray-400 text-xs text-center">لا توجد تنبيهات حالياً</p>
+            @endforelse
+        </div>
+    </div>
+</div>
 <div class="relative">
     <button onclick="toggleProfileMenu(event)" class="flex items-center gap-3 pl-2 py-1 rounded-full hover:bg-white/5 transition focus:outline-none">
         <div class="w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#FBB108] to-yellow-200 text-black font-bold">
@@ -135,20 +152,20 @@
     <i class="fa-brands fa-bots text-[#FBB108] text-3xl group-hover:text-blue-400 group-hover:scale-110 transition-all duration-300 relative z-10"></i>
 </button>
 
-<div id="chat-window" class="fixed bottom-24 right-8 w-[380px] max-w-[calc(100vw-2rem)] bg-[#111111]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl hidden flex-col h-[500px] z-50 overflow-hidden transition-all duration-300">
+<div id="chat-window" class="fixed bottom-24 right-8 w-[500px] max-w-[calc(100vw-2rem)] bg-[#111111]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl hidden flex-col h-[630px] z-50 overflow-hidden transition-all duration-300">
     
     <div class="p-4 border-b border-white/10 font-bold text-white bg-white/5 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span class="text-xs tracking-wide font-mono text-gray-300"> <i class="fa-solid fa-robot text-xs text-yellow-400"></i> SMART SOL AGENT AI</span>
+            <span class="text-md tracking-wide font-mono text-green-500"> <i class="fa-solid fa-robot text-xs text-yellow-400"></i> SMARTSOL AGENT AI</span>
         </div>
         <button onclick="toggleChat()" class="text-gray-400 hover:text-white transition-colors text-sm">✕</button>
     </div>
 
     <div id="chat-messages" class="flex-1 p-4 overflow-y-auto text-xs text-gray-200 space-y-4 flex flex-col scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
         <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right break-words" dir="rtl">
-            مرحباً بك! أنا الـ <span class="text-green-400">Agent AI</span> ديال <span class="text-yellow-400">SmartSol</span> . إلا عندك أي سؤال تقني أو مشكل فالسيستم، أنا هنا باش نجاوبك بالدارجة!
-        </div>
+    مرحباً بك! أنا مساعد <span class="text-green-400">SmartSol</span> الذكي. أنا هنا لمساعدتك في كل ما يخص الطاقات الشمسية والزراعة. كيف يمكنني مساعدتك اليوم؟
+</div>
     </div>
 
     <div class="p-3 bg-black/40 border-t border-white/10 flex gap-2 shrink-0">
@@ -182,15 +199,18 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script>
+    // --- منطق قائمة البروفايل ---
     function toggleProfileMenu(event) {
         event.stopPropagation();
         const menu = document.getElementById('profileMenu');
+        const alertsMenu = document.getElementById('alerts-list'); // تأمين إغلاق التنبيهات
+        alertsMenu.classList.add('hidden');
         menu.classList.toggle('hidden');
     }
 
+    // --- منطق المودال ديال الخروج ---
     function openLogoutModal() {
         document.getElementById('profileMenu').classList.add('hidden');
-        
         const modal = document.getElementById('logout-modal');
         modal.classList.remove('hidden');
         setTimeout(() => {
@@ -208,97 +228,94 @@
         }, 150);
     }
 
-    window.onclick = function(event) {
-        const menu = document.getElementById('profileMenu');
-        const modal = document.getElementById('logout-modal');
-        
-        if (!menu.classList.contains('hidden')) {
-            menu.classList.add('hidden');
-        }
-        
-        if (event.target == modal) {
-            closeLogoutModal();
+    // --- منطق الشات ---
+    function toggleChat() {
+        const chatWindow = document.getElementById('chat-window');
+        if (chatWindow.classList.contains('hidden')) {
+            chatWindow.classList.remove('hidden');
+            chatWindow.classList.add('flex');
+        } else {
+            chatWindow.classList.remove('flex');
+            chatWindow.classList.add('hidden');
         }
     }
-// Function لفتح وإغلاق الشات
-function toggleChat() {
-    const chatWindow = document.getElementById('chat-window');
-    if (chatWindow.classList.contains('hidden')) {
-        chatWindow.classList.remove('hidden');
-        chatWindow.classList.add('flex');
-    } else {
-        chatWindow.classList.remove('flex');
-        chatWindow.classList.add('hidden');
-    }
-}
-function sendMessage() {
-    const inputEl = document.getElementById('user-input');
-    const chatMessages = document.getElementById('chat-messages');
-    const message = inputEl.value.trim();
 
-    if (!message) return;
+    function sendMessage() {
+        const inputEl = document.getElementById('user-input');
+        const chatMessages = document.getElementById('chat-messages');
+        const message = inputEl.value.trim();
 
-    // 1. عرض ميساج المستخدم (نقي ومجموع ف الجنب)
-    chatMessages.innerHTML += `
-        <div class="bg-blue-600/10 border border-blue-500/20 text-blue-300 p-3 rounded-2xl rounded-tr-none max-w-[85%] self-end text-right text-xs break-words" dir="rtl">
-            ${message}
-        </div>
-    `;
-    
-    inputEl.value = '';
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+        if (!message) return;
 
-    // 2. تأثير الانتظار والتحليل
-    const typingId = 'typing-' + Date.now();
-    chatMessages.innerHTML += `
-        <div id="${typingId}" class="bg-white/5 border border-white/5 text-gray-400 p-3 rounded-2xl rounded-tl-none max-w-[50%] self-start text-right text-xs animate-pulse" dir="rtl">
-          ... جاري الرد⏳
-        </div>
-    `;
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    // 3. الاتصال بالـ Controller
-    fetch("{{ route('chatbot.message') }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ message: message })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('Network error');
-        return res.json();
-    })
-    .then(data => {
-        document.getElementById(typingId).remove();
-
-        // فورماتينغ سريع باش يرجع النجمات (**) لـ Bold تاقات نقيين
-        let formattedReply = data.reply.replace(/\*\*(.*?)\*\*/g, '<strong class="text-[#FBB108] font-bold">$1</strong>');
-        // تعويض السطور الجديدة لـ <br> باش يجي داكشي منظم سطر بسطر
-        formattedReply = formattedReply.replace(/\n/g, '<br>');
-
-        // 4. عرض جواب الـ Agent AI المغربي
         chatMessages.innerHTML += `
-            <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs leading-relaxed break-words text-gray-200" dir="rtl">
-                ${formattedReply}
+            <div class="bg-blue-600/10 border border-blue-500/20 text-blue-300 p-3 rounded-2xl rounded-tr-none max-w-[85%] self-end text-right text-xs break-words" dir="rtl">
+                ${message}
+            </div>
+        `;
+        inputEl.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        const typingId = 'typing-' + Date.now();
+        chatMessages.innerHTML += `
+            <div id="${typingId}" class="bg-white/5 border border-white/5 text-gray-400 p-3 rounded-2xl rounded-tl-none max-w-[50%] self-start text-right text-xs animate-pulse" dir="rtl">
+              ... جاري الرد⏳
             </div>
         `;
         chatMessages.scrollTop = chatMessages.scrollHeight;
-    })
-    .catch(err => {
-        const typingEl = document.getElementById(typingId);
-        if (typingEl) typingEl.remove();
-        
-        chatMessages.innerHTML += `
-            <div class="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs" dir="rtl">
-                سْمْح ليا، وقع عطل تقني فالسيرفر. عاود صيفط الميساج!
-            </div>
-        `;
-        console.error(err);
-    });
-}
 
+        fetch("{{ route('chatbot.message') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById(typingId).remove();
+            let formattedReply = data.reply.replace(/\*\*(.*?)\*\*/g, '<strong class="text-[#FBB108] font-bold">$1</strong>').replace(/\n/g, '<br>');
+            chatMessages.innerHTML += `
+                <div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs leading-relaxed break-words text-gray-200" dir="rtl">
+                    ${formattedReply}
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        })
+        .catch(err => {
+            document.getElementById(typingId)?.remove();
+            chatMessages.innerHTML += `<div class="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start text-right text-xs" dir="rtl">عذراً، حدث خطأ تقني.</div>`;
+        });
+    }
+
+    // --- منطق التنبيهات (Alerts) المدمج ---
+    const bellBtn = document.getElementById('bell-btn');
+    const alertsList = document.getElementById('alerts-list');
+    const alertBadge = document.getElementById('alert-badge');
+
+    bellBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('profileMenu').classList.add('hidden'); // إغلاق البروفايل إيلا كان مفتوح
+        alertsList.classList.toggle('hidden');
+    });
+
+    function addAlert(message) {
+        if(alertsList.querySelector('p')) alertsList.innerHTML = '';
+        alertsList.innerHTML += `<div class="text-red-400 text-xs border-b border-white/5 pb-2">⚠️ ${message}</div>`;
+        alertBadge.classList.remove('hidden');
+    }
+
+    // --- المنسق العام للنقرات ---
+    window.onclick = function(event) {
+        const menu = document.getElementById('profileMenu');
+        const modal = document.getElementById('logout-modal');
+        const alertsList = document.getElementById('alerts-list');
+        
+        if (!menu.contains(event.target)) menu.classList.add('hidden');
+        if (!alertsList.contains(event.target) && event.target !== bellBtn) alertsList.classList.add('hidden');
+        
+        if (event.target == modal) closeLogoutModal();
+    }
 </script>
 </body>
 </html>

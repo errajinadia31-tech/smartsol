@@ -12,7 +12,7 @@
                         <h2 class="font-black text-2xl tracking-tighter uppercase italic">
                             PRO<span class="text-[#FBB108]">FILE</span>
                         </h2>
-                        <p class="text-[10px] text-white/40 uppercase tracking-[0.3em]">Gestion du compte EnerSol</p>
+                        <p class="text-[10px] text-white/40 uppercase tracking-[0.3em]">Gestion du compte SmartSol</p>
                     </div>
                     
                     <div class="flex items-center gap-4">

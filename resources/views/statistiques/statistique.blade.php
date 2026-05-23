@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title','EnerSol | Statistiques & Analyse')
+@section('title','SmartSol | Statistiques & Analyse')
 @section('content')
 
 <div class="p-8 space-y-8 min-h-screen text-white">
@@ -103,116 +103,164 @@ $labels = $chartData->pluck('created_at')->map(fn($d) => \Carbon\Carbon::parse($
 $powers = $chartData->pluck('power');
 @endphp
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+    
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                x: {
-                    display: false
-                },
-                y: {
-                    display: false
-                }
-            }
-        };
+        
+        // جلب البيانات الممررة من الـ Blade
+        const labelsData = @json($labels);
+        const productionData = @json($powers);
+        
+        // محاكاة بيانات الاستهلاك (60% من الإنتاج + نويز خفيف)
+        const consumptionData = productionData.map(p => (p * 0.6) + (Math.random() * 5));
 
-        // --- Mini Chart Logic ---
+        // ==========================================
+        // 1️⃣ إعداد وإشعاع الـ MINI CHART (تيسير خط الإنتاج)
+        // ==========================================
         const ctxMini = document.getElementById('minichart').getContext('2d');
-        const gradMini = ctxMini.createLinearGradient(0, 0, 0, 100);
-        gradMini.addColorStop(0, 'rgba(251, 177, 8, 0.4)');
+        
+        // إنشاء تدرج شفاف تحت الخط الأصفر
+        const gradMini = ctxMini.createLinearGradient(0, 0, 0, 70);
+        gradMini.addColorStop(0, 'rgba(251, 177, 8, 0.25)');
         gradMini.addColorStop(1, 'rgba(251, 177, 8, 0)');
 
         new Chart(ctxMini, {
             type: 'line',
             data: {
-                labels: @json($labels),
+                labels: labelsData,
                 datasets: [{
-                    data: @json($powers),
+                    data: productionData,
                     borderColor: '#FBB108',
                     borderWidth: 2,
                     fill: true,
                     backgroundColor: gradMini,
                     tension: 0.4,
-                    pointRadius: 0
+                    pointRadius: 0,
+                    pointHoverRadius: 0
                 }]
             },
-            options: commonOptions
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { x: { display: false }, y: { display: false } },
+                animation: { duration: 800, easing: 'easeOutQuad' }
+            }
         });
 
-        // --- Main Comparison Chart Logic ---
+        // ==========================================
+        // 2️⃣ إعداد مبيان المقارنة الرئيسي (Comparison Chart)
+        // ==========================================
         const ctxComp = document.getElementById('comparisonChart').getContext('2d');
-        const productionData = @json($powers);
-        // Simulation Consommation : 60% de la production + un peu de bruit aléatoire
-        const consumptionData = productionData.map(p => (p * 0.6) + (Math.random() * 5));
+        
+        // تدرج لوني فخم للإنتاج (الأصفر الشفاف)
+        const gradProd = ctxComp.createLinearGradient(0, 0, 0, 300);
+        gradProd.addColorStop(0, 'rgba(251, 177, 8, 0.15)');
+        gradProd.addColorStop(1, 'rgba(251, 177, 8, 0.01)');
+
+        // تدرج لوني ناعم للاستهلاك (الأزرق الشفاف)
+        const gradCons = ctxComp.createLinearGradient(0, 0, 0, 300);
+        gradCons.addColorStop(0, 'rgba(59, 130, 246, 0.08)');
+        gradCons.addColorStop(1, 'rgba(59, 130, 246, 0)');
 
         new Chart(ctxComp, {
             type: 'line',
             data: {
-                labels: @json($labels),
-                datasets: [{
+                labels: labelsData,
+                datasets: [
+                    {
                         label: 'Production',
                         data: productionData,
                         borderColor: '#FBB108',
-                        backgroundColor: 'rgba(251, 177, 8, 0.1)',
+                        backgroundColor: gradProd,
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
                         pointBackgroundColor: '#FBB108',
-                        pointRadius: 2
+                        pointBorderColor: '#121212',
+                        pointBorderWidth: 1.5,
+                        pointRadius: 0, // مخفي ويظهر فقط عند الـ Hover
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: '#FBB108',
+                        pointHoverBorderColor: '#ffffff',
+                        pointHoverBorderWidth: 2
                     },
                     {
                         label: 'Consommation',
                         data: consumptionData,
                         borderColor: '#3b82f6',
-                        backgroundColor: 'transparent',
+                        backgroundColor: gradCons,
                         borderWidth: 2,
-                        borderDash: [5, 5], // الخط المقطع للاستهلاك
-                        fill: false,
+                        borderDash: [6, 6], // ستايل مقطع احترافي للتمييز
+                        fill: true,
                         tension: 0.4,
-                        pointRadius: 0
+                        pointRadius: 0,
+                        pointHoverRadius: 4,
+                        pointHoverBackgroundColor: '#3b82f6',
+                        pointHoverBorderColor: '#ffffff'
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
                 plugins: {
-                    legend: {
-                        display: false
-                    } // Hidden because we made a custom legend in HTML
+                    legend: { display: false }, // مخفية لأننا صاوبنا وحدة مخصصة بالـ HTML
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#16161a', // خلفية داكنة متناسقة مع السيستم
+                        titleColor: '#94a3b8',
+                        titleFont: { size: 11, weight: 'bold', family: 'sans-serif' },
+                        bodyColor: '#ffffff',
+                        bodyFont: { size: 13, weight: '600' },
+                        borderColor: 'rgba(255, 255, 255, 0.08)',
+                        borderWidth: 1,
+                        padding: 12,
+                        boxPadding: 6,
+                        cornerRadius: 12,
+                        usePointStyle: true,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) label += context.parsed.y.toFixed(1) + ' W';
+                                return label;
+                            }
+                        }
+                    }
                 },
                 scales: {
                     x: {
-                        grid: {
-                            display: false
-                        },
+                        grid: { display: false },
                         ticks: {
-                            color: '#4b5563',
-                            font: {
-                                size: 10
-                            }
+                            color: '#64748b',
+                            font: { size: 11, weight: '500' },
+                            maxTicksLimit: 12 // منع ازدحام الكلمات فالمحور الأفقي
                         }
                     },
                     y: {
                         grid: {
-                            color: 'rgba(255,255,255,0.05)'
+                            color: 'rgba(255, 255, 255, 0.03)', // خطوط أفقية ناعمة جداً
+                            drawBorder: false
                         },
                         ticks: {
-                            color: '#4b5563',
-                            font: {
-                                size: 10
-                            }
+                            color: '#64748b',
+                            font: { size: 11, family: 'monospace' },
+                            callback: function(value) { return value + ' W'; }
                         }
                     }
+                },
+                animation: {
+                    duration: 1200,
+                    easing: 'easeOutQuart'
                 }
             }
         });
@@ -220,17 +268,18 @@ $powers = $chartData->pluck('power');
 </script>
 
 <style>
-    /* Custom Scrollbar for better Glassmorphism look */
+    /* تحسين الـ Scrollbar ليتناسب مع الـ Bento Grid والـ Dark Mode */
     ::-webkit-scrollbar {
-        width: 5px;
+        width: 6px;
+        height: 6px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #0a0a0a;
+        background: #0d0d0d;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #1f1f1f;
+        background: #222222;
         border-radius: 10px;
     }
 

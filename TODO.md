@@ -1,4 +1,4 @@
-# EnerSol Backend Fix Plan
+# smartSol Backend Fix Plan
 
 ## Information Gathered
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\SensorController;
 use App\Http\Controllers\EnergyDataController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\StatistiqueController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -47,7 +48,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/statistiques', [DashboardController::class, 'Statistiques'])
+Route::get('/statistiques', [StatistiqueController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('statistiques');
     
@@ -62,4 +63,6 @@ Route::middleware(['auth'])->group(function () {
     
     Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.message');
 });
+Route::get('/dashboard/data', [DashboardController::class, 'getDashboardData'])->name('dashboard.data');
+Route::get('/dashboard/simulation', [DashboardController::class, 'getSimulationData'])->name('simulation.data');
 require __DIR__.'/auth.php';

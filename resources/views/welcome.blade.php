@@ -35,8 +35,8 @@
 
 <body class="bg-[#0a0a0a] overflow-x-hidden text-white antialiased">
     <!-- navbar start -->
-    <header>
-        <nav class="absolute top-0 left-0 w-full z-20 flex items-center justify-between px-12 py-6 text-white bg-black/20 backdrop-blur-sm">
+    <header >
+        <nav class="absolute top-0  left-0 w-full z-20 flex items-center justify-between px-12 py-6 text-white bg-black/50 backdrop-blur-sm">
             <div class="flex items-center">
                 <img src="{{ asset('images/logo1.png') }}" class="w-[38px]" alt="Logo">
                 <span class="font-bold text-2xl tracking-tighter uppercase italic"> Smart<span class="text-[#FBB108]">Sol</span></span>
@@ -61,6 +61,9 @@
         <div class="hidden md:block">
             <a href="{{ route('login') }}" class="px-5 py-2 border border-white/50 rounded-full hover:bg-white hover:text-black transition duration-300 text-sm">Se connecter</a>
             <a href="{{ route('register') }}" class="px-5 py-2 border border-white/50 rounded-full hover:bg-white hover:text-black transition duration-300 text-sm">S'inscrire</a>
+            <a href="#pricing" class="px-6 py-2 bg-[#FBB108] text-black font-bold rounded-full hover:bg-white transition duration-300 text-sm shadow-[0_0_15px_rgba(251,177,8,0.4)]">
+        S'abonner
+    </a>
         </div>
         </nav>
     </header>
@@ -73,14 +76,14 @@
             <video class="w-full h-full object-cover " autoplay muted loop playsinline>
                 <source src="{{ asset('videos/video_bg.mp4') }}" type="video/mp4">
             </video>
-            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent"></div>
             <div class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
         </div>
 
         <div class="relative z-10 h-full container mx-auto px-6 flex flex-col justify-center">
             <div class="max-w-4xl">
 
-                <div class="flex items-center gap-4 mb-6" data-aos="fade-down">
+                <div class="flex items-center gap-4 mb-6 mt-4" data-aos="fade-down">
                     <div class="h-[1px] w-12 bg-[#FBB108]"></div>
                     <span class="text-[#FBB108] text-[10px] font-black uppercase tracking-[0.5em]">Next-Gen Solar Intelligence</span>
                 </div>
@@ -98,7 +101,7 @@
                         </p>
                         <div class="mt-8 flex gap-4">
                             <a href="{{ route('register') }}" class="px-8 py-4 bg-[#FBB108] text-black font-black uppercase text-[10px] tracking-widest rounded-full hover:bg-white transition-all">
-                                Commencer
+                                Commencer Maintenant
                             </a>
                             <button class="w-12 h-12 flex items-center justify-center border border-white/20 rounded-full text-white hover:bg-white/10">
                                 <i class="fa-solid fa-play text-[10px]"></i>
@@ -333,7 +336,7 @@ Accès limité à l’Agent AI (diagnostics simples)                        </li
             </div>
 
             <div id="plan-pro" 
-                 class="pricing-card relative backdrop-blur-md bg-gradient-to-b from-white/[0.08] to-white/[0.02] border-2 border-[#E1A91A] rounded-3xl p-8 flex flex-col justify-between shadow-[0_0_30px_rgba(225,169,26,0.1)] transform md:-translate-y-4 cursor-pointer transition-all duration-300">
+                 class="shadow-yellow-500/10  relative backdrop-blur-md bg-gradient-to-b from-white/[0.08] to-white/[0.02] border-2 border-[#E1A91A] rounded-3xl p-8 flex flex-col justify-between shadow-[0_0_30px_rgba(225,169,26,0.1)] transform md:-translate-y-4 cursor-pointer transition-all duration-300">
                 <span class="badge-populaire absolute -top-3 right-8 bg-[#E1A91A] text-black text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
                     Populaire
                 </span>
@@ -448,14 +451,14 @@ Accès limité à l’Agent AI (diagnostics simples)                        </li
             <div class="relative  backdrop-blur-md bg-white/[0.02] border border-white/[0.08] rounded-3xl p-8 pt-16 text-center  transition-all duration-300 hover:border-[#E1A91A]/[0.4] hover:shadow-[0_10px_30px_rgba(225,169,26,0.05)]">
                 <div class="absolute -top-14 left-1/2 -translate-x-1/2">
                     <div class="w-28 h-28 rounded-full p-1 bg-gradient-to-b from-[#E1A91A] to-[#E1A91A]/[0.3] shadow-xl shadow-[#E1A91A]/[0.1]">
-                        <img src="{{asset('images/nouha.jpeg')}}"
-                             alt="nouha" 
+                        <img src="{{asset('images/abdlhamid.jpeg')}}"
+                             alt="abdlhamid" 
                              class="w-full h-full object-cover rounded-full border-2 border-black">
                     </div>
                 </div>
 
-                <h3 class="text-xl font-bold text-[#E1A91A] tracking-wide">Nouha</h3>
-                <p class="text-xs text-gray-400 mt-1 font-medium">Experte énergie renouvelable</p>
+                <h3 class="text-xl font-bold text-[#E1A91A] tracking-wide">Abd Elhamid</h3>
+                <p class="text-xs text-gray-400 mt-1 font-medium">Expert en énergies renouvelables</p>
                 
                 <div class="flex justify-center gap-1 text-[#E1A91A] my-4 text-sm">
                     <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>

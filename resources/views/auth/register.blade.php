@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>EnerSol | Inscription</title>
+    <title>SmartSol | Inscription</title>
     <link rel="shortcut icon" href="{{asset('images/logo1.png')}}" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,7 +34,7 @@
                     <div class="w-10 h-10 mb-2">
                         <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-full h-full object-contain text-center">
                     </div>
-                    <span class="font-bold text-xl md:text-2xl tracking-tighter uppercase italic text-center">Ener<span class="text-[#FBB108]">Sol</span></span>
+                    <span class="font-bold text-xl md:text-2xl tracking-tighter uppercase italic text-center">Smart<span class="text-[#FBB108]">Sol</span></span>
                     <p class="text-white/60 text-[9px] uppercase tracking-[0.25em] text-center">Créer un compte</p>
                 </div>
 

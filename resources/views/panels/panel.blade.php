@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title','EnerSol | Gestion des Panneaux')
+@section('title','SmartSol | Gestion des Panneaux')
 
 @section('content')
 <div class="flex justify-between items-center mb-10 px-8">

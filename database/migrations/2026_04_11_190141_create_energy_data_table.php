@@ -11,31 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('energy_data', function (Blueprint $table) {
-
-            $table->id();
-
-            $table->foreignId('panel_id')
-                ->constrained()
-                ->onDelete('cascade');
-
-            $table->decimal('voltage', 8, 2)->default(0);
-
-            $table->decimal('current', 8, 2)->default(0);
-
-            $table->decimal('power', 10, 2)->default(0);
-
-            $table->decimal('energy_kwh', 12, 4)->default(0);
-
-            // NEW AI FIELDS
-            $table->float('temperature')->nullable();
-
-            $table->string('weather_condition')->nullable();
-
-            $table->float('efficiency')->nullable();
-
-            $table->timestamps();
-        });
+{
+    Schema::create('energy_data', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('panel_id')->constrained()->onDelete('cascade');
+        $table->decimal('power', 8, 2);
+        $table->decimal('consumption', 8, 2); 
+        $table->integer('voltage');
+        $table->integer('current');
+        $table->decimal('energy_kwh', 10, 4);
+        $table->timestamps();
+    });
+}
     }
 
     /**

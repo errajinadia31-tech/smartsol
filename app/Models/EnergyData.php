@@ -6,8 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class EnergyData extends Model
 {
-    protected $fillable = ['sensor_id', 'panel_id', 'voltage', 'current', 'power', 'energy_kwh'];
-
+protected $fillable = [
+    'panel_id', 
+    'power', 
+    'consumption', 
+    'voltage', 
+    'current', 
+    'energy_kwh'
+];
     public function sensor() {
         return $this->belongsTo(Sensor::class);
     }

@@ -14,19 +14,6 @@ class EnergyDataSeeder extends Seeder
     {
         $users = User::all();
 
-        if ($users->isEmpty()) {
-
-            $users = collect([
-                User::firstOrCreate(
-                    ['email' => 'test@smartsol.com'],
-                    [
-                        'name' => 'Nadia Erraji',
-                        'password' => bcrypt('password123'),
-                    ]
-                )
-            ]);
-        }
-
         foreach ($users as $user) {
 
             $panel = Panel::firstOrCreate(
@@ -51,36 +38,29 @@ class EnergyDataSeeder extends Seeder
 
                 $hour = $time->hour;
 
-                // إنتاج حسب الوقت
+                // إنتاج واستهلاك حسب الوقت
                 if ($hour >= 7 && $hour <= 18) {
-
-                    // النهار
+                    // ☀️ النهار: الإنتاج طالع والاستهلاك كيكون متوازن (مثلاً بين 40% و 70% من الإنتاج)
                     $variation = rand(55, 95) / 100;
-
+                    $power = round($basePower * $variation, 2);
+                    $consumption = round(($power * 0.6) + rand(5, 15), 2);
                 } else {
-
-                    // الليل
+                    // 🌙 الليل: الإنتاج شبه منعدم، ولكن الاستهلاك كيبقى كاين (الأجهزة، الإضاءة...)
                     $variation = rand(0, 5) / 100;
+                    $power = round($basePower * $variation, 2);
+                    // استهلاك ليلي عشوائي منطقي (مثلاً بين 30W و 80W)
+                    $consumption = round(rand(30, 80), 2);
                 }
 
-                $power = round($basePower * $variation, 2);
-
                 EnergyData::create([
-
                     'panel_id' => $panel->id,
-
                     'power' => $power,
-
+                    'consumption' => $consumption, // ✅ الكولون الجديد اللي زدتيه ف الـ Migration
                     'voltage' => rand(220, 240),
-
                     'current' => rand(2, 8),
-
                     'energy_kwh' => round($power / 1000, 4),
-
                     'created_at' => $time,
-
                     'updated_at' => $time,
-                   
                 ]);
             }
         }

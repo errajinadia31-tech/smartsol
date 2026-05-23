@@ -31,14 +31,14 @@
                     </select>
                 </form>
                 <button onclick="window.print()" class="bg-[#FBB108] hover:bg-[#fbc547] text-black font-bold py-3 px-6 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-sm">
-                    <i class="fa-solid fa-file-pdf"></i> PDF
+                    <i class="fa-solid fa-file-pdf"></i> PDF / Imprimer
                 </button>
             </div>
         </div>
     </div>
 
-    {{-- Stats Grid --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+ {{-- Stats Grid (معدل ومحبوك للطباعة) --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12 print:grid-cols-4 print:gap-4 print:mb-8">
         @php
             $cards = [
                 ['label' => 'Total Panneaux', 'val' => $stats['total_panels'], 'icon' => 'fa-solar-panel', 'color' => '#FBB108'],
@@ -49,14 +49,14 @@
         @endphp
 
         @foreach($cards as $card)
-        <div class="bg-[#0d0d0d] border border-white/5 p-7 rounded-[2rem] hover:border-white/20 transition-all duration-500 relative overflow-hidden">
-            <div class="flex items-center gap-4 mb-4">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background: {{ $card['color'] }}20; color: {{ $card['color'] }}">
-                    <i class="fa-solid {{ $card['icon'] }} text-xl"></i>
+        <div class="bg-[#0d0d0d] border border-white/5 p-7 rounded-[2rem] hover:border-white/20 transition-all duration-500 relative overflow-hidden print:bg-gray-50 print:border-gray-200 print:p-5 print:rounded-2xl">
+            <div class="flex items-center gap-4 mb-4 print:mb-2">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center print:w-9 print:h-9 print:rounded-xl" style="background: {{ $card['color'] }}20; color: {{ $card['color'] }}">
+                    <i class="fa-solid {{ $card['icon'] }} text-xl print:text-sm"></i>
                 </div>
-                <span class="text-[10px] text-gray-500 font-black uppercase tracking-widest">{{ $card['label'] }}</span>
+                <span class="text-[10px] text-gray-500 font-black uppercase tracking-widest print:text-[8px] print:text-gray-600">{{ $card['label'] }}</span>
             </div>
-            <h3 class="text-3xl font-black text-white tracking-tight">{{ $card['val'] }}</h3>
+            <h3 class="text-3xl font-black text-white tracking-tight print:text-xl print:text-black">{{ $card['val'] }}</h3>
         </div>
         @endforeach
     </div>
@@ -93,7 +93,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/5">
-                    @foreach($panels as $panel)
+                    @forelse($panels as $panel)
                     <tr class="group hover:bg-white/[0.03] transition-all">
                         <td class="px-10 py-7">
                             <div class="flex items-center gap-4">
@@ -118,7 +118,13 @@
                             <span class="text-xs font-mono text-gray-600">{{ $panel->serial_number }}</span>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-10 py-10 text-center text-gray-500 italic">
+                            Aucun équipement trouvé pour cette période.
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -126,7 +132,7 @@
 </div>
 
 <script>
-    // Power Chart
+    // 1. Power Chart (Bar Chart)
     new Chart(document.getElementById('powerChart'), {
         type: 'bar',
         data: {
@@ -135,46 +141,173 @@
                 label: 'Watts',
                 data: @json($values),
                 backgroundColor: '#FBB108',
-                borderRadius: 10,
+                hoverBackgroundColor: '#fbc547',
+                borderRadius: 12,
+                borderSkipped: false
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false }
+            },
             scales: {
-                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
-                x: { grid: { display: false }, ticks: { color: '#666' } }
+                y: { 
+                    grid: { color: 'rgba(255,255,255,0.05)' }, 
+                    ticks: { color: '#888', font: { size: 11 } } 
+                },
+                x: { 
+                    grid: { display: false }, 
+                    ticks: { color: '#888', font: { size: 11 } } 
+                }
             }
         }
     });
 
-    // Status Chart
+    // 2. Status Chart (Doughnut)
     new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
         data: {
             labels: ['Actifs', 'Alertes', 'Hors-service'],
             datasets: [{
-                data: [{{ $stats['active_panels'] }}, {{ $stats['maintenance'] }}, {{ $stats['total_panels'] - $stats['active_panels'] - $stats['maintenance'] }}],
+                data: [
+                    {{ $stats['active_panels'] }}, 
+                    {{ $stats['maintenance'] }}, 
+                    {{ max(0, $stats['total_panels'] - $stats['active_panels'] - $stats['maintenance']) }}
+                ],
                 backgroundColor: ['#10b981', '#FBB108', '#ef4444'],
                 borderWidth: 0,
+                hoverOffset: 4
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { color: '#888', padding: 20 } } },
-            cutout: '80%'
+            plugins: { 
+                legend: { 
+                    position: 'bottom', 
+                    labels: { 
+                        color: '#aaa', 
+                        padding: 20,
+                        font: { size: 11, weight: 'bold' } 
+                    } 
+                } 
+            },
+            cutout: '75%'
         }
     });
 </script>
 
 <style>
+    /* تخصيص الـ Scrollbar لكونتينر الميساجات فقط في الشاشة العادية */
+    #chat-messages::-webkit-scrollbar {
+        width: 5px;
+    }
+    #chat-messages::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    #chat-messages::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 9999px;
+    }
+    #chat-messages::-webkit-scrollbar-thumb:hover {
+        background: rgba(251, 177, 8, 0.4);
+    }
+
+    /* 🖨️ الحل النهائي لتقطيع الصفحات والنقاء الكامل 🖨️ */
     @media print {
-        body { background: white; }
-        .bg-[#0d0d0d], .bg-white\/5 { background: white !important; border: 1px solid #eee !important; color: black !important; }
-        .text-white, h1, h2, h3 { color: black !important; }
-        button, select { display: none !important; }
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            box-shadow: none !important;
+        }
+
+        /* جعل كل الحاويات بيضاء تماماً لإلغاء الإطار الرمادي الغامق */
+        body, html, main, #app, .px-8, div, section {
+            background: #ffffff !important;
+            color: #000000 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: visible !important; /* السماح للمحتوى بالنزول */
+        }
+
+        /* إخفاء العناصر غير الضرورية */
+        button, select, form, #chat-window, .fixed, sidebar, nav, .fa-file-pdf, iframe {
+            display: none !important;
+        }
+
+        /* الهيدر الرئيسي */
+        .relative.bg-gradient-to-r {
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 1.5rem !important;
+            padding: 1.5rem 2rem !important;
+            margin-top: 1rem !important;
+            margin-bottom: 2rem !important;
+        }
+        .relative.bg-gradient-to-r h1 { color: #000000 !important; font-size: 1.75rem !important; }
+        .relative.bg-gradient-to-r p { color: #475569 !important; }
+        .relative.bg-gradient-to-r .absolute { display: none !important; }
+
+        /* كروت الـ Bento الـ 4 فـ سطر واحد متناسق */
+        .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-4 {
+            display: grid !important;
+            grid-template-cols: repeat(4, minmax(0, 1fr)) !important;
+            gap: 1rem !important;
+            margin-bottom: 2rem !important;
+        }
+        .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-4 > div {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 1rem !important;
+            padding: 1rem !important;
+        }
+
+        /* 📄 منع تقطيع المبيانات بشكل عشوائي وترتيبها */
+        .grid-cols-1.lg\:grid-cols-3 {
+            display: flex !important;
+            flex-direction: column !important; /* تحويلهم عمودياً فـ الطباعة باش ياخدو راحتهم */
+            gap: 1.5rem !important;
+        }
+
+        .lg\:col-span-2.bg-white\/5, .bg-white\/5.flex-col {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 1.5rem !important;
+            padding: 1.5rem !important;
+            page-break-inside: avoid !important; /* أمر صارم: ممنوع تقطع الكرت وسط الصفحة */
+            break-inside: avoid !important;
+            margin-bottom: 1.5rem !important;
+        }
+
+        /* تحديد حجم منطقي للمبيانات فـ الورقة */
+        .h-\[300px\], .h-\[250px\] {
+            height: 240px !important; 
+        }
+        canvas {
+            max-width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* 📄 جدول البيانات ينزل فـ صفحة جديدة إيلا تاح الأمر بنقاء */
+        .bg-\[\#0d0d0d\]\/40 {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 1.5rem !important;
+            margin-top: 2rem !important;
+            page-break-inside: auto !important;
+        }
+        table { width: 100% !important; page-break-inside: auto !important; }
+        tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+        th { color: #475569 !important; background: #f8fafc !important; padding: 12px !important; }
+        td { color: #000000 !important; padding: 12px !important; border-bottom: 1px solid #e2e8f0 !important; }
+
+        /* إعدادات هوامش الصفحة A4 */
+        @page {
+            size: A4;
+            margin: 20mm 15mm 20mm 15mm;
+        }
     }
 </style>
 @endsection

@@ -46,6 +46,7 @@ class StatistiqueController extends Controller
 
         $latestData = $fakeData->sortByDesc('created_at');
 
-        return view('statistiques.index', compact('latestData'));
+        return view('statistiques.statistique', compact('latestData'));
     }
+    
 }

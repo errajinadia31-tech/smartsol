@@ -113,55 +113,73 @@
             </div>
         </div>
     </section>
-
-    <section class="mt-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
-            <!-- Production Card -->
-            <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-[#FBB108]/30 transition-all group shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-2 -top-2 opacity-5 group-hover:opacity-10 transition-opacity">
-                    <i class="fa-solid fa-sun text-8xl text-[#FBB108]"></i>
-                </div>
-                <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Production Actuelle</h2>
-                <div class="flex items-baseline gap-2">
-                    <span id="live-power" class="text-[#FBB108] text-6xl font-black italic tracking-tighter">{{ $currentProduction }}</span>
-                    <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Watts</span>
-                </div>
+<!-- cards section -->
+<section class="mt-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+        
+       <!-- 4. AI Assistant Card (تأخذ العرض كاملاً) -->
+        <div class="bg-[#121212]/70 border border-[#FBB108]/30 p-8 rounded-[2rem] md:col-span-3 shadow-3xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-[#FBB108] font-bold italic uppercase tracking-widest text-sm">Assistant SmartSol AI</h2>
+                <button id="ai-btn" class="bg-[#FBB108] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase hover:scale-105 transition-all">
+                    Lancer Diagnostic
+                </button>
             </div>
-
-            <!-- Capacité Card -->
-            <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-green-500/30 transition-all shadow-2xl">
-                <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Capacité Système</h2>
-                <div class="flex items-baseline gap-2">
-                    <span id="total-cap" class="text-green-500 text-6xl font-black italic tracking-tighter">{{ $totalPower }}</span>
-                    <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Wp</span>
-                </div>
+            <div id="ai-response" class="text-right text-gray-400 font-medium italic text-sm border-t border-white/5 pt-4">
+                انقر للحصول على تحليل ذكي لإنتاجك الحالي...
             </div>
-
-                <!-- AI Assistant Card -->
-            <div class="bg-[#121212]/70 border border-[#FBB108]/30 p-8 rounded-[2rem] md:col-span-2 shadow-3xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-[#FBB108] font-bold italic uppercase tracking-widest text-sm">Assistant SmartSol AI</h2>
-                    <button id="ai-btn" class="bg-[#FBB108] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase hover:scale-105 transition-all">
-                        Lancer Diagnostic
-                    </button>
-                </div>
-                <div id="ai-response" class=" text-right text-gray-400 font-medium italic text-sm border-t border-white/5 pt-4">
-                    انقر للحصول على تحليل ذكي لإنتاجك الحالي...
-                </div>
-            </div>
-            <!-- Chart Section -->
-            <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] flex flex-col w-full md:col-span-2 lg:col-span-4 shadow-3xl">
-                <div class="flex justify-between items-center mb-10 px-4">
-                    <h2 class="text-gray-300 font-bold italic uppercase tracking-widest text-sm border-l-2 border-[#FBB108] pl-4">Graphique de Production Réelle</h2>
-                    <span class="flex items-center gap-2 text-[10px] text-[#FBB108] bg-[#FBB108]/10 px-4 py-1 rounded-full border border-[#FBB108]/20 animate-pulse font-bold">● LIVE DATA</span>
-                </div>
-                <div class="h-[400px] w-full">
-                    <canvas id="energyChart"></canvas>
-                </div>
-            </div>
-            
         </div>
 
+        <!-- 1. Production Card -->
+        <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-[#FBB108]/30 transition-all group shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-2 -top-2 opacity-5 group-hover:opacity-10 transition-opacity">
+                <i class="fa-solid fa-sun text-8xl text-[#FBB108]"></i>
+            </div>
+            <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Production Actuelle</h2>
+            <div class="flex items-baseline gap-2">
+                <span id="live-power" class="text-[#FBB108] text-6xl font-black italic tracking-tighter">{{ $currentProduction }}</span>
+                <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Watts</span>
+            </div>
+        </div>
+
+        <!-- 2. Consommation Card -->
+        <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-blue-500/30 transition-all group shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-2 -top-2 opacity-5 group-hover:opacity-10 transition-opacity">
+                <i class="fa-solid fa-plug-circle-bolt text-8xl text-blue-500"></i>
+            </div>
+            <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Consommation Actuelle</h2>
+            <div class="flex items-baseline gap-2">
+                <span id="live-consumption" class="text-blue-500 text-6xl font-black italic tracking-tighter">{{ $currentConsommation }}</span>
+                <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Watts</span>
+            </div>
+        </div>
+
+        <!-- 3. Capacité Card -->
+        <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-10 rounded-[1.5rem] flex flex-col hover:border-green-500/30 transition-all shadow-2xl">
+            <h2 class="text-gray-400 self-start mb-10 font-medium uppercase text-[10px] tracking-widest">Capacité Système</h2>
+            <div class="flex items-baseline gap-2">
+                <span id="total-cap" class="text-green-500 text-6xl font-black italic tracking-tighter">{{ $totalPower }}</span>
+                <span class="text-gray-500 text-[11px] uppercase font-bold tracking-widest">Wp</span>
+            </div>
+        </div>
+
+     
+
+        <!-- 5. Chart Section (تأخذ العرض كاملاً) -->
+        <div class="bg-[#121212]/50 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] flex flex-col w-full md:col-span-3 shadow-3xl">
+            <div class="flex justify-between items-center mb-10 px-4">
+                <h2 class="text-gray-300 font-bold italic uppercase tracking-widest text-sm border-l-2 border-[#FBB108] pl-4">
+    Production vs Consommation <span id="weather-status" class="ml-2"></span>
+</h2>
+                <span class="flex items-center gap-2 text-[10px] text-[#FBB108] bg-[#FBB108]/10 px-4 py-1 rounded-full border border-[#FBB108]/20 animate-pulse font-bold">● LIVE DATA</span>
+            </div>
+            <div class="h-[400px] w-full">
+                <canvas id="energyChart"></canvas>
+            </div>
+        </div>
+        
+    </div>
+</section>
 </div>
 </main>
 
@@ -169,128 +187,132 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script>
+    // 1. تعريف المتغير global باش نقدروا نوصلو للـ Chart فالدوال كاملة
+    let energyChart;
 
-    // Example dyal update f l-dashboard
-function refreshAIStatus(currentProd, currentCap) {
-    fetch('/api/analyze-energy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prod: currentProd, cap: currentCap })
-    })
-    .then(res => res.json())
-    .then(data => {
-        // Hna katsift l-msg l-hadak l-box li f image_82185c.png
-        document.getElementById('ai-assistant-msg').innerText = data.analysis;
-        
-        // Ila bghiti t-badli l-color dyal l-border 3la hsab status
-        let box = document.getElementById('ai-box');
-        if(data.status === 'critical_low') box.style.borderColor = 'red';
-        else box.style.borderColor = '#fbbf24'; // Yellow dyal Enersol
-    });
-}
-    async function sendMessage() {
-    const input = document.getElementById('user-input');
-    const box = document.getElementById('chat-messages');
-    
-    if(!input.value) return;
+    document.addEventListener('DOMContentLoaded', function () {
+        // تجهيز الداتا الأولية
+        const labels = @json($latestReadings->pluck('created_at')->map(fn($d) => \Carbon\Carbon::parse($d)->format('H:i')));
+        const prodData = @json($latestReadings->pluck('power'));
+        const consData = @json($latestReadings->pluck('consumption'));
 
-    // 1. عرض ميساج المستخدم
-    box.innerHTML += `<div class="text-blue-400 mb-2 text-right">أنت: ${input.value}</div>`;
-    
-    // حفظ القيمة ومسح الحقل باش يبان الـ UX سريع
-    const message = input.value;
-    input.value = '';
+        const ctx = document.getElementById('energyChart').getContext('2d');
 
-    try {
-        // 2. إرسال الطلب
-        const response = await fetch('/chatbot/ask', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // هاد السطر هو اللي كيحل مشكل الـ 419 Error
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+        // إعداد الـ Chart بـ 2 Datasets
+        energyChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Production',
+                        data: prodData,
+                        borderColor: '#FBB108',
+                        backgroundColor: 'rgba(251,177,8,0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Consommation',
+                        data: consData,
+                        borderColor: '#3B82F6', // لون أزرق للاستهلاك
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
             },
-            body: JSON.stringify({ message: message })
+            options: { responsive: true, maintainAspectRatio: false }
         });
 
-        if (!response.ok) throw new Error('مشكل في السيرفر');
+        // كود الـ AI
+        const btn = document.getElementById('ai-btn');
+        const output = document.getElementById('ai-response');
 
-        const data = await response.json();
-        
-        // 3. عرض جواب الـ IA
-        box.innerHTML += `<div class="text-green-400 mb-2">SmartSol: ${data.answer}</div>`;
-        
-        // Scroll للاسفل باش يبان الجواب
-        box.scrollTop = box.scrollHeight;
+        btn.addEventListener('click', async () => {
+            const power = parseFloat(document.getElementById('live-power').innerText) || 0;
+            const cap = parseFloat(document.getElementById('total-cap').innerText) || 0;
 
-    } catch (error) {
-        box.innerHTML += `<div class="text-red-400 mb-2 text-xs">وقع مشكل، حاول مرة أخرى.</div>`;
-        console.error(error);
-    }
-}
+            btn.innerText = "جاري التحليل...";
+            btn.disabled = true;
 
-document.addEventListener('DOMContentLoaded', function () {
+            try {
+                const res = await fetch('/analyze-energy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ prod: power, cap: cap })
+                });
 
-    const labels = @json(
-        $latestReadings->pluck('created_at')
-        ->map(fn($d) => \Carbon\Carbon::parse($d)->format('H:i'))
-    );
-
-    const dataValues = @json($latestReadings->pluck('power'));
-
-    const ctx = document.getElementById('energyChart');
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Production',
-                data: dataValues,
-                borderColor: '#FBB108',
-                backgroundColor: 'rgba(251,177,8,0.1)',
-                fill: true,
-                tension: 0.4
-            }]
-        }
+                const data = await res.json();
+                output.innerHTML = data.analysis ? "🤖 " + data.analysis : "❌ " + data.error;
+            } catch (e) {
+                output.innerHTML = "❌ خطأ في الاتصال";
+            }
+            btn.innerText = "Lancer Diagnostic";
+            btn.disabled = false;
+        });
     });
 
-    // AI
-    const btn = document.getElementById('ai-btn');
-    const output = document.getElementById('ai-response');
+    // دالة التحديث اللي كتجيب الداتا من السيرفر
+function refreshSimulation() {
+    fetch('{{ route("simulation.data") }}')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('live-power').innerText = data.production;
+            document.getElementById('live-consumption').innerText = data.consumption;
 
-    btn.addEventListener('click', async () => {
+            // تحديث أيقونة الطقس
+            const weatherSpan = document.getElementById('weather-status');
+            if (!data.isDay) {
+                weatherSpan.innerHTML = '<i class="fa-solid fa-moon text-blue-300"></i>';
+            } else if (data.cloudiness > 70) {
+                weatherSpan.innerHTML = '<i class="fa-solid fa-cloud text-gray-400"></i>';
+            } else {
+                weatherSpan.innerHTML = '<i class="fa-solid fa-sun text-yellow-500"></i>';
+            }
 
-        const power = parseFloat(document.getElementById('live-power').innerText) || 0;
-        const cap = parseFloat(document.getElementById('total-cap').innerText) || 0;
+            updateChart(data.production, data.consumption, data.timestamp);
+        });
+}       
+ fetch('{{ route("simulation.data") }}')
+            .then(response => response.json())
+            .then(data => {
+                // تحديث البطاقات
+                document.getElementById('live-power').innerText = data.production;
+                document.getElementById('live-consumption').innerText = data.consumption;
 
-        btn.innerText = "جاري التحليل...";
-        btn.disabled = true;
-
-        try {
-            const res = await fetch('/analyze-energy', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({ prod: power, cap: cap })
+                // تحديث الـ Chart
+                updateChart(data.production, data.consumption, data.timestamp);
             });
+    
+if (data.isDay && data.production == 0) {
+    addAlert("الإنتاج متوقف! تأكد من الألواح.");
+}if (data.consumption > (data.production * 1.5)) {
+    addAlert("الاستهلاك طالع بزاف مقارنة بالإنتاج!");
+}
+    // تحديث كل 2 ثانية
+    setInterval(refreshSimulation, 2000);
 
-            const data = await res.json();
+    // الدالة اللي كتحدث الـ Chart
+    function updateChart(prod, cons, time) {
+        if (!energyChart) return;
 
-            output.innerHTML = data.analysis
-                ? "🤖 " + data.analysis
-                : "❌ " + data.error;
+        // دفع الداتا الجديدة
+        energyChart.data.labels.push(time);
+        energyChart.data.datasets[0].data.push(prod);
+        energyChart.data.datasets[1].data.push(cons);
 
-        } catch (e) {
-            output.innerHTML = "❌ خطأ في الاتصال";
+        // الحفاظ على آخر 13 قراءة فقط
+        if (energyChart.data.labels.length > 13) {
+            energyChart.data.labels.shift();
+            energyChart.data.datasets[0].data.shift();
+            energyChart.data.datasets[1].data.shift();
         }
-
-        btn.innerText = "Lancer Diagnostic";
-        btn.disabled = false;
-    });
-
-});
+        
+        energyChart.update();
+    }
 </script>
 @endsection
