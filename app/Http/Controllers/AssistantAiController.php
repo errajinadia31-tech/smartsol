@@ -7,90 +7,216 @@ use App\Models\Panel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class AssistantAiController extends Controller
 {
     public function analyzeEnergy(Request $request)
     {
-        $prod = (float) $request->input('prod');
-        $cap  = (float) $request->input('cap');
-        $weather = $request->input('weather', 'غير معروف');
-        $hour = (int) now()->format('H');
-
-        // 1. فحص أساسي للبيانات
-        if ($cap <= 0) return response()->json(['error' => 'السعة غير صحيحة'], 400);
-        if ($prod < 0) return response()->json(['error' => 'الإنتاج غير صالح'], 400);
-
-        // 2. منطق الليل (توفير للـ API Calls والـ Tokens)
-        if ($hour < 6 || $hour > 20) {
-            return response()->json([
-                'analysis' => 'السيستيم دابا فوضع راحة، نتلاقاو غدا مع الشمش إن شاء الله.',
-                'efficiency' => 0,
-                'status' => 'night'
-            ]);
-        }
-
-        $panelIds = Panel::where('user_id', Auth::id())->pluck('id');
-
-        // 3. تحليل البيانات التاريخية
-        $history = EnergyData::whereIn('panel_id', $panelIds)
-            ->orderBy('created_at', 'desc')
-            ->limit(12)
-            ->pluck('power');
-        $avg = $history->count() > 0 ? $history->avg() : $prod;
-
-        $todayProd = EnergyData::whereIn('panel_id', $panelIds)
-            ->whereDate('created_at', now()->toDateString())
-            ->sum('power');
-
-        $yesterdayProd = EnergyData::whereIn('panel_id', $panelIds)
-            ->whereDate('created_at', now()->subDay()->toDateString())
-            ->sum('power');
-
-        $comparison = ($yesterdayProd > 0) 
-            ? (($todayProd >= $yesterdayProd) ? "الإنتاج اليوم أحسن من البارح." : "الإنتاج اليوم أقل من البارح.")
-            : "ماكاينش داتا كافية للمقارنة.";
-
-        // 4. تحديد الكفاءة
-        $currentEfficiency = max(0, min(100, ($prod / $cap) * 100));
-        $eff = round($currentEfficiency, 2);
-
-        $status = ($eff < 20) ? 'critical_low' : (($eff < 50) ? 'low' : 'normal');
-
-        // 5. الاتصال بـ Groq AI
-        $apiKey = config('services.groq.api_key');
-        
         try {
-            $response = Http::withToken($apiKey)
-                ->post('https://api.groq.com/openai/v1/chat/completions', [
-                    'model' => 'llama-3.1-8b-instant',
-                    'messages' => [
-                        [
-                            'role' => 'system',
-                            'content' => "أنت خبير طاقة شمسية ومساعد ذكي لـ 'EnerSol'. تحدث بالدارجة المغربية فقط وبطريقة ودودة. 1. جاوب بجملة واحدة قصيرة ومفيدة. 2. ممنوع الأرقام الطويلة. 3. إذا كان الإنتاج ضعيف أو كاين تراجع، نصح المستخدم بتنظيف الألواح أو فحص التوصيلات. 4. شجع المستخدم إذا كان الأداء جيد."
-                        ],
-                        [
-                            'role' => 'user',
-                            'content' => "البيانات: الساعة {$hour}:00، الإنتاج الحالي {$prod} واط، الكفاءة {$eff}%، الطقس: {$weather}. المقارنة: {$comparison}. عطيني تحليل ونصيحة."
-                        ]
-                    ],
-                    'temperature' => 0.2,
-                    'max_tokens' => 100
-                ]);
 
-            if ($response->successful()) {
+       
+            $validated = $request->validate([
+                'prod' => 'required|numeric|min:0',
+                'cap' => 'required|numeric|gt:0',
+                'weather' => 'nullable|string|max:255',
+            ]);
+
+            $prod = (float) $validated['prod'];
+            $cap = (float) $validated['cap'];
+            $weather = $validated['weather'] ?? 'غير معروف';
+
+            $hour = (int) now()->format('H');
+
+      
+            if ($hour < 6 || $hour > 20) {
                 return response()->json([
-                    'analysis' => trim($response->json()['choices'][0]['message']['content']),
-                    'efficiency' => $eff,
-                    'status' => $status
+                    'analysis' => 'السيستيم دابا فوضع راحة، نتلاقاو غدا مع الشمش إن شاء الله ☀️',
+                    'efficiency' => 0,
+                    'status' => 'night'
                 ]);
             }
 
-            return response()->json(['error' => 'تعذر الحصول على تحليل من الذكاء الاصطناعي'], 500);
+            $currentEfficiency = ($prod / $cap) * 100;
+
+            $eff = round(
+                max(0, min(100, $currentEfficiency)),
+                2
+            );
+
+         
+            $status = match (true) {
+                $eff < 10 => 'critical',
+                $eff < 30 => 'low',
+                $eff < 60 => 'medium',
+                default => 'excellent',
+            };
+
+           
+            $panelIds = Panel::where('user_id', Auth::id())
+                ->pluck('id');
+
+            
+            $history = EnergyData::whereIn('panel_id', $panelIds)
+                ->latest()
+                ->limit(12)
+                ->pluck('power');
+
+            $avg = $history->count() > 0
+                ? round($history->avg(), 2)
+                : $prod;
+
+     
+            $todayProd = EnergyData::whereIn('panel_id', $panelIds)
+                ->whereDate('created_at', now()->toDateString())
+                ->sum('power');
+
+            $yesterdayProd = EnergyData::whereIn('panel_id', $panelIds)
+                ->whereDate('created_at', now()->subDay()->toDateString())
+                ->sum('power');
+
+            $comparison = 'ماكايناش داتا كافية للمقارنة.';
+
+            if ($yesterdayProd > 0) {
+
+                $comparison = $todayProd >= $yesterdayProd
+                    ? 'الإنتاج اليوم أحسن من البارح.'
+                    : 'الإنتاج اليوم أقل من البارح.';
+            }
+
+          
+            $cacheKey = md5(
+                $prod .
+                $cap .
+                $weather .
+                $hour .
+                $status
+            );
+
+        
+            if (Cache::has($cacheKey)) {
+
+                return response()->json(
+                    Cache::get($cacheKey)
+                );
+            }
+
+            $apiKey = config('services.groq.api_key');
+
+            if (!$apiKey) {
+
+                return response()->json([
+                    'error' => 'Groq API Key غير موجود'
+                ], 500);
+            }
+
+ 
+            $response = Http::timeout(15)
+                ->withToken($apiKey)
+                ->post('https://api.groq.com/openai/v1/chat/completions', [
+
+                    'model' => 'llama-3.1-8b-instant',
+
+                    'messages' => [
+
+                        [
+                            'role' => 'system',
+
+                            'content' => "
+أنت مساعد ذكي للطاقة الشمسية داخل تطبيق SmarSol.
+
+جاوب بالدارجة المغربية فقط.
+
+جاوب بجملة قصيرة ومفيدة.
+
+إذا كانت الكفاءة ضعيفة اقترح:
+- تنظيف الألواح
+- فحص التوصيلات
+
+إذا الأداء جيد شجع المستخدم.
+
+ممنوع الشرح الطويل.
+"
+                        ],
+
+                        [
+                            'role' => 'user',
+
+                            'content' => "
+الساعة: {$hour}:00
+الإنتاج الحالي: {$prod} واط
+الكفاءة: {$eff}%
+الطقس: {$weather}
+المعدل العام: {$avg}
+المقارنة: {$comparison}
+
+عطيني تحليل قصير ونصيحة.
+"
+                        ]
+                    ],
+
+                    'temperature' => 0.2,
+                    'max_tokens' => 80
+                ]);
+
+            // =========================
+            // Success
+            // =========================
+            if ($response->successful()) {
+
+                $analysis = trim(
+                    $response->json()['choices'][0]['message']['content']
+                );
+
+                $data = [
+
+                    'analysis' => $analysis,
+
+                    'efficiency' => $eff,
+
+                    'status' => $status,
+
+                    'comparison' => $comparison,
+
+                    'average_power' => $avg
+                ];
+
+                // Cache Result
+                Cache::put(
+                    $cacheKey,
+                    $data,
+                    now()->addMinutes(5)
+                );
+
+                return response()->json($data);
+            }
+
+            // =========================
+            // API Error
+            // =========================
+            Log::error('Groq API Error', [
+                'response' => $response->body()
+            ]);
+
+            return response()->json([
+                'error' => 'تعذر الحصول على تحليل الذكاء الاصطناعي'
+            ], 500);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => 'خطأ في الاتصال بالسيرفر'], 500);
+
+            // =========================
+            // Exception Log
+            // =========================
+            Log::error('AI Controller Error', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return response()->json([
+                'error' => 'وقع خطأ فالسيرفر'
+            ], 500);
         }
     }
 }

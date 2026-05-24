@@ -10,7 +10,6 @@ use App\Http\Controllers\SensorController;
 use App\Http\Controllers\EnergyDataController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\StatistiqueController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -48,9 +47,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/statistiques', [StatistiqueController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('statistiques');
+
     
     
     Route::get('/repport', [ReportController::class, 'rapport'])
@@ -69,5 +66,4 @@ Route::get('/dashboard/simulation', [DashboardController::class, 'getSimulationD
 Route::get('/companies', function () {
     return view('companies.companie');
 })->name('companies');
-
 require __DIR__.'/auth.php';

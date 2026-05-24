@@ -267,11 +267,12 @@ Suivi simple de la production et de la consommation d’énergie.</p>
         </div>
     </section>
     <!-- about section end-->
-
     
-<section id="pricing" class="py-20 bg-black text-white relative overflow-hidden">
-    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#E1A91A]/[0.03] blur-[150px] rounded-full pointer-events-none"></div>
-
+    
+    <!-- saas section start-->
+    <section id="pricing" class="py-20 bg-black text-white relative overflow-hidden">
+        <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#E1A91A]/[0.03] blur-[150px] rounded-full pointer-events-none"></div>
+        
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" >
         
         <div class="text-center mb-16" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000" data-aos-easing="ease-out">
@@ -326,9 +327,9 @@ Suivi simple de la production et de la consommation d’énergie.</p>
                         </li>
                         <li class="flex items-center gap-3">
                             <svg class="w-4 h-4 text-[#E1A91A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-Accès limité à l’Agent AI (diagnostics simples)                        </li>
-                       
-                    </ul>
+                            Accès limité à l’Agent AI (diagnostics simples)
+                        </li>
+                        </ul>
                 </div>
                 <button class="plan-btn w-full mt-8 py-3 rounded-xl border border-white/[0.1] hover:bg-white/[0.05] transition-all font-semibold text-sm">
                     Commencer Gratuitement
@@ -411,7 +412,9 @@ Accès limité à l’Agent AI (diagnostics simples)                        </li
         </div>
     </div>
 </section>
+<!-- saas secrion end  -->
 
+<!-- testimonials section start -->
 <section id="testimonials" class="py-24 bg-black text-white relative overflow-hidden">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#E1A91A]/[0.03] blur-[150px] rounded-full pointer-events-none"></div>
 
@@ -507,12 +510,15 @@ Accès limité à l’Agent AI (diagnostics simples)                        </li
                 </div>
 
                 <cite class="text-sm text-gray-300 leading-relaxed italic border-t border-white/[0.05] pt-4">
-"SmartSol a amélioré l’efficacité énergétique de ma ferme."                </cite>
+                    "SmartSol a amélioré l’efficacité énergétique de ma ferme."
+                </cite>
             </div>
 
         </div>
     </div>
 </section>
+<!-- testimonials section end -->
+
     <!-- footer section start-->
     <footer class="bg-[#070707] border-t border-white/5 pt-20 pb-10 px-8 xl:px-0">
         <div class="max-w-6xl mx-auto">
@@ -593,7 +599,7 @@ Accès limité à l’Agent AI (diagnostics simples)                        </li
             easing: 'ease-out-quad',
         });
 
-document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
         let isYearly = false;
 
         // Elements dial Toggle
@@ -688,8 +694,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-   
-     
     </script>
 
  

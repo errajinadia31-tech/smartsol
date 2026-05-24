@@ -51,14 +51,14 @@
         <!-- navbar start-->
         <header class="flex items-center justify-between px-8 py-4 text-white mb-6">
             <div class="flex items-center">
-                <img src="{{ asset('images/logo1.png') }}" class="w-[38px]" alt="Logo">
-                <span class="font-bold text-2xl tracking-tighter uppercase italic">Smart<span class="text-[#FBB108]">Sol</span></span>
+            <img src="{{ asset('images/logo1.png') }}" class="w-[38px]" alt="Logo">
+            <span class="font-bold text-2xl tracking-tighter uppercase italic">Smart<span class="text-[#FBB108]">Sol</span></span>
+            
             </div>
             
             <nav class="hidden lg:flex gap-3 text-xs uppercase tracking-widest">
                 <a href="{{ route('dashboard') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('dashboard') ? 'active-nav' : '' }}">Dashboard</a>
                 <a href="{{ route('panels.index') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('panels.index') ? 'active-nav' : '' }}">Panneaux</a>
-                <a href="{{ route('statistiques') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('statistiques') ? 'active-nav' : '' }}">Statistiques</a>
                 <a href="{{ route('rapport') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('rapport')? 'active-nav' : '' }}">Rapports</a>
                 <a href="{{ route('companies') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('companies')? 'active-nav' : '' }}">Maintenance</a>
             </nav>
