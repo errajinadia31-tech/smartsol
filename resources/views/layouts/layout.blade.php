@@ -110,8 +110,11 @@
         @if(app()->getLocale() == 'fr')
             <img src="https://flagcdn.com/w40/fr.png"
                  class="w-6 h-6 rounded-full object-cover">
-        @else
+        @elseif(app()->getLocale() == 'ar')
             <img src="https://flagcdn.com/w40/ma.png"
+                 class="w-6 h-6 rounded-full object-cover">
+        @else
+            <img src="https://flagcdn.com/w40/gb.png"
                  class="w-6 h-6 rounded-full object-cover">
         @endif
     </button>
@@ -119,7 +122,13 @@
     <!-- Menu -->
     <div id="langMenu"
         class="hidden absolute right-0 mt-2 w-20 rounded-xl bg-[#121212] border border-white/10 shadow-lg overflow-hidden">
-
+        
+        <a href="{{ route('lang.switch', 'ar') }}"
+           class="flex items-center gap-2 px-3 py-2 text-sm hover:bg-white/5">
+            <img src="https://flagcdn.com/w40/ma.png"
+                 class="w-5 h-5 rounded-full object-cover">
+            AR
+        </a>
         <a href="{{ route('lang.switch', 'fr') }}"
            class="flex items-center gap-2 px-3 py-2 text-sm hover:bg-white/5">
             <img src="https://flagcdn.com/w40/fr.png"
@@ -127,11 +136,11 @@
             FR
         </a>
 
-        <a href="{{ route('lang.switch', 'ar') }}"
+        <a href="{{ route('lang.switch', 'en') }}"
            class="flex items-center gap-2 px-3 py-2 text-sm hover:bg-white/5">
-            <img src="https://flagcdn.com/w40/ma.png"
+            <img src="https://flagcdn.com/w40/gb.png"
                  class="w-5 h-5 rounded-full object-cover">
-            AR
+            EN
         </a>
     </div>
                 </div>

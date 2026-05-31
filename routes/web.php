@@ -25,7 +25,7 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
 
     // Switch Language Route
     Route::get('lang/{locale}', function ($locale) {
-        if (in_array($locale, ['ar', 'fr'])) {
+        if (in_array($locale, ['ar', 'fr' ,'en'])) {
             session()->put('locale', $locale);
             session()->save(); 
         }
