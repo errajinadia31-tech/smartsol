@@ -117,6 +117,7 @@
     "Localisation": "الموقع",
     "Serial No.": "الرقم التسلسلي",
     "Aucun équipement trouvé pour cette période.": "لم يتم العثور على أي معدات في هذه الفترة.",
-    "Cliquez pour obtenir une analyse intelligente de votre production actuelle...": "انقر للحصول على تحليل ذكي لمنتجك الحالي..."
+    "Cliquez pour obtenir une analyse intelligente de votre production actuelle...": "انقر للحصول على تحليل ذكي لمنتجك الحالي...",
+    "Unités hors service. Vérifiez les connexions réseau ou l'alimentation": "الوحدات خارج الخدمة. تحقق من اتصالات الشبكة أو إمدادات الطاقة."
 
 }

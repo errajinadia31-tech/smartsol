@@ -105,7 +105,7 @@
 
                         <div class="relative z-10 mt-auto">
                             <p class="text-[9px] text-gray-600 mt-4 font-medium italic leading-relaxed max-w-[200px]">
-                                {{ __("Unités hors service. Vérifiez les connexions réseau ou l'alimentation.") }}
+                                {{ __("Unités hors service. Vérifiez les connexions réseau ou l'alimentation") }}
                             </p>
                         </div>
                     </div>
