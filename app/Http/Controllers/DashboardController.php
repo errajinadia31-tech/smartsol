@@ -61,9 +61,14 @@ class DashboardController extends Controller
 public function getSimulationData()
 {
     $userId = Auth::id();
+    
+    // جلب عدد الألواح والقدرة الإجمالية للسيستيم (مثلا 550 WP)
     $userPanelsCount = Panel::where('user_id', $userId)->count();
+    
+    // هنا غادي نحطو السقف (يلا كانت عندك كارد فيها 550، نقدرو نعتبروها هي الحد الأقصى)
+    $maxCapacity = 550; 
 
-    // 1. جلب حالة الطقس من الكاش (باش نسرعوا الـ Dashboard ونحميوا الـ API Key)
+    // 1. جلب حالة الطقس من الكاش
     $weather = \Illuminate\Support\Facades\Cache::remember('weather_data_' . $userId, 300, function () use ($userId) {
         $city = Panel::where('user_id', $userId)->with('zone')->first()->zone->city ?? 'Oujda';
         $response = \Illuminate\Support\Facades\Http::get("https://api.openweathermap.org/data/2.5/weather", [
@@ -77,20 +82,31 @@ public function getSimulationData()
     $cloudiness = $weather['clouds']['all'] ?? 0;
     $hour = (int) now()->format('H');
 
-    // 2. حساب الإنتاج بواقعية
+    // 2. حساب الإنتاج بواقعية مع احترام سقف القدرة الإجمالية
     $production = 0;
     if ($userPanelsCount > 0 && $hour >= 6 && $hour <= 20) {
         // منحنى الشمس (Bell Curve)
         $factor = max(0, 1 - pow(($hour - 13) / 7, 2));
-        // تأثير الغيوم الحقيقي: كلما زادت الغيوم (cloudiness)، نقص الإنتاج
-        $production = 450 * $userPanelsCount * $factor * (1 - ($cloudiness / 100));
+        
+        // حساب الإنتاج لكل لوحة (مثلا كل لوحة فيها 150W أولا 200W)
+        // أولا نقدرو نحسبوها مباشرة كنسبة مئوية من القدرة الإجمالية للسيستيم:
+        $baseProduction = $maxCapacity * $factor * (1 - ($cloudiness / 100));
+
+        // نزيدو عشوائية خفيفة (+/- 5 واط) بحال ديما
+        if ($baseProduction > 0) {
+            $production = $baseProduction + rand(-5, 5);
+            
+            // حماية صارمة: الإنتاج ما يفوتش القدرة القصوى وما يهبطش تحت الزيرو
+            $production = min($maxCapacity, max(0, $production));
+        }
     }
 
     return response()->json([
-        'production'  => round($production),
-        'consumption' => ($userPanelsCount > 0) ? rand(50, 300) : 0,
-        'timestamp'   => now()->format('H:i'),
+        'production'  => (int) round($production),
+        'consumption' => ($userPanelsCount > 0) ? rand(50, 300) : 0, 
+        'timestamp'   => date('H:i:s'), 
         'cloudiness'  => $cloudiness
-    ]);
+    ])
+    ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
 }
 }

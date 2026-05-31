@@ -46,7 +46,7 @@ class ReportController extends Controller
             'stats'    => $stats,
             'labels'   => $chartData->keys(),
             'values'   => $chartData->values(),
-            'period'   => $days // نمرر المدة الحالية للـ View
+            'period'   => $days 
         ]);
     }
 }

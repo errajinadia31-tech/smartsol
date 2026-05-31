@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title','SmartSol | Rapport de Performance')
+@section('title', __('SmartSol | Rapport de Performance'))
 
 @section('content')
 {{-- Chart.js CDN --}}
@@ -16,35 +16,35 @@
                     <span class="w-8 h-[2px] bg-[#FBB108]"></span>
                     <span class="text-[#FBB108] text-xs font-black uppercase tracking-[0.3em]">Analytics Engine</span>
                 </div>
-                <h1 class="text-4xl font-black text-white tracking-tighter">Rapport de Performance</h1>
-                <p class="text-gray-400 mt-2 font-light">Analyse détaillée de votre infrastructure.</p>
+                <h1 class="text-4xl font-black text-white tracking-tighter">{{ __('Rapport de Performance') }}</h1>
+                <p class="text-gray-400 mt-2 font-light">{{ __('Analyse détaillée de votre infrastructure.') }}</p>
             </div>
             
             {{-- Filter & Print --}}
             <div class="flex items-center gap-4">
                 <form action="{{ route('rapport') }}" method="GET" id="periodForm">
                     <select name="period" onchange="this.form.submit()" class="bg-[#0d0d0d] text-white text-xs font-bold py-3 px-5 rounded-xl border border-white/10 outline-none focus:border-[#FBB108] cursor-pointer">
-                        <option value="7" {{ request('period') == 7 ? 'selected' : '' }}>7 Jours</option>
-                        <option value="15" {{ request('period') == 15 ? 'selected' : '' }}>15 Jours</option>
-                        <option value="30" {{ request('period') == 30 || !request('period') ? 'selected' : '' }}>30 Jours</option>
-                        <option value="90" {{ request('period') == 90 ? 'selected' : '' }}>90 Jours</option>
+                        <option value="7" {{ request('period') == 7 ? 'selected' : '' }}>7 {{ __('Jours') }}</option>
+                        <option value="15" {{ request('period') == 15 ? 'selected' : '' }}>15 {{ __('Jours') }}</option>
+                        <option value="30" {{ request('period') == 30 || !request('period') ? 'selected' : '' }}>30 {{ __('Jours') }}</option>
+                        <option value="90" {{ request('period') == 90 ? 'selected' : '' }}>90 {{ __('Jours') }}</option>
                     </select>
                 </form>
                 <button onclick="window.print()" class="bg-[#FBB108] hover:bg-[#fbc547] text-black font-bold py-3 px-6 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-sm">
-                    <i class="fa-solid fa-file-pdf"></i> PDF / Imprimer
+                    <i class="fa-solid fa-file-pdf"></i> {{ __('PDF / Imprimer') }}
                 </button>
             </div>
         </div>
     </div>
 
- {{-- Stats Grid (معدل ومحبوك للطباعة) --}}
+    {{-- Stats Grid --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12 print:grid-cols-4 print:gap-4 print:mb-8">
         @php
             $cards = [
-                ['label' => 'Total Panneaux', 'val' => $stats['total_panels'], 'icon' => 'fa-solar-panel', 'color' => '#FBB108'],
-                ['label' => 'Capacité Totale', 'val' => number_format($stats['total_power'], 0) . ' W', 'icon' => 'fa-bolt', 'color' => '#3b82f6'],
-                ['label' => 'Unités Actives', 'val' => $stats['active_panels'], 'icon' => 'fa-plug-circle-check', 'color' => '#10b981'],
-                ['label' => 'Maintenance', 'val' => $stats['maintenance'], 'icon' => 'fa-triangle-exclamation', 'color' => '#ef4444']
+                ['label' => __('Total Panneaux'), 'val' => $stats['total_panels'], 'icon' => 'fa-solar-panel', 'color' => '#FBB108'],
+                ['label' => __('Capacité Totale'), 'val' => number_format($stats['total_power'], 0) . ' W', 'icon' => 'fa-bolt', 'color' => '#3b82f6'],
+                ['label' => __('Unités Actives'), 'val' => $stats['active_panels'], 'icon' => 'fa-plug-circle-check', 'color' => '#10b981'],
+                ['label' => __('Maintenance'), 'val' => $stats['maintenance'], 'icon' => 'fa-triangle-exclamation', 'color' => '#ef4444']
             ];
         @endphp
 
@@ -64,13 +64,13 @@
     {{-- Charts Section --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         <div class="lg:col-span-2 bg-white/5 border border-white/10 p-8 rounded-[3rem] backdrop-blur-xl">
-            <h2 class="text-white font-bold mb-8 text-sm uppercase tracking-widest italic border-l-2 border-[#FBB108] pl-4">Distribution de l'énergie (W)</h2>
+            <h2 class="text-white font-bold mb-8 text-sm uppercase tracking-widest italic border-s-2 rtl:border-s-0 rtl:border-e-2 border-[#FBB108] ps-4 rtl:ps-0 rtl:pe-4">{{ __("Distribution de l'énergie (W)") }}</h2>
             <div class="h-[300px]">
                 <canvas id="powerChart"></canvas>
             </div>
         </div>
         <div class="bg-white/5 border border-white/10 p-8 rounded-[3rem] backdrop-blur-xl flex flex-col items-center">
-            <h2 class="text-white font-bold mb-8 text-sm uppercase tracking-widest italic">État des Unités</h2>
+            <h2 class="text-white font-bold mb-8 text-sm uppercase tracking-widest italic">{{ __('État des Unités') }}</h2>
             <div class="h-[250px] w-full">
                 <canvas id="statusChart"></canvas>
             </div>
@@ -80,16 +80,16 @@
     {{-- Table Section --}}
     <div class="bg-[#0d0d0d]/40 border border-white/10 rounded-[3rem] backdrop-blur-3xl overflow-hidden shadow-2xl">
         <div class="px-10 py-8 border-b border-white/5">
-            <h2 class="text-xl font-bold text-white tracking-tight">Inventaire Technique</h2>
+            <h2 class="text-xl font-bold text-white tracking-tight">{{ __('Inventaire Technique') }}</h2>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-left">
+            <table class="w-full text-start">
                 <thead>
                     <tr class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-black bg-white/[0.01]">
-                        <th class="px-10 py-6">Équipement</th>
-                        <th class="px-10 py-6">Localisation</th>
-                        <th class="px-10 py-6 text-center">Status</th>
-                        <th class="px-10 py-6 text-right">Serial No.</th>
+                        <th class="px-10 py-6 text-start">{{ __('Équipement') }}</th>
+                        <th class="px-10 py-6 text-start">{{ __('Localisation') }}</th>
+                        <th class="px-10 py-6 text-center">{{ __('Status') }}</th>
+                        <th class="px-10 py-6 text-end">{{ __('Serial No.') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/5">
@@ -104,24 +104,24 @@
                             </div>
                         </td>
                         <td class="px-10 py-7 text-gray-400 italic">
-                            {{ $panel->zone->city ?? 'N/A' }}
+                            {{ $panel->zone->city ?? __('N/A') }}
                         </td>
                         <td class="px-10 py-7 text-center">
                             <span class="px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest
                                 @if($panel->status == 'active') bg-green-500/10 text-green-500
                                 @elseif($panel->status == 'maintenance') bg-[#FBB108]/10 text-[#FBB108]
                                 @else bg-red-500/10 text-red-500 @endif">
-                                {{ $panel->status }}
+                                {{ __($panel->status) }}
                             </span>
                         </td>
-                        <td class="px-10 py-7 text-right">
+                        <td class="px-10 py-7 text-end">
                             <span class="text-xs font-mono text-gray-600">{{ $panel->serial_number }}</span>
                         </td>
                     </tr>
                     @empty
                     <tr>
                         <td colspan="4" class="px-10 py-10 text-center text-gray-500 italic">
-                            Aucun équipement trouvé pour cette période.
+                            {{ __('Aucun équipement trouvé pour cette période.') }}
                         </td>
                     </tr>
                     @endforelse
@@ -169,7 +169,7 @@
     new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Actifs', 'Alertes', 'Hors-service'],
+            labels: ["{{ __('Actifs') }}", "{{ __('Maintenance') }}", "{{ __('Inactifs') }}"],
             datasets: [{
                 data: [
                     {{ $stats['active_panels'] }}, 
@@ -200,7 +200,6 @@
 </script>
 
 <style>
-    /* تخصيص الـ Scrollbar لكونتينر الميساجات فقط في الشاشة العادية */
     #chat-messages::-webkit-scrollbar {
         width: 5px;
     }
@@ -215,7 +214,6 @@
         background: rgba(251, 177, 8, 0.4);
     }
 
-    /* 🖨️ الحل النهائي لتقطيع الصفحات والنقاء الكامل 🖨️ */
     @media print {
         * {
             -webkit-print-color-adjust: exact !important;
@@ -223,21 +221,18 @@
             box-shadow: none !important;
         }
 
-        /* جعل كل الحاويات بيضاء تماماً لإلغاء الإطار الرمادي الغامق */
         body, html, main, #app, .px-8, div, section {
             background: #ffffff !important;
             color: #000000 !important;
             padding: 0 !important;
             margin: 0 !important;
-            overflow: visible !important; /* السماح للمحتوى بالنزول */
+            overflow: visible !important;
         }
 
-        /* إخفاء العناصر غير الضرورية */
         button, select, form, #chat-window, .fixed, sidebar, nav, .fa-file-pdf, iframe {
             display: none !important;
         }
 
-        /* الهيدر الرئيسي */
         .relative.bg-gradient-to-r {
             background: #f8fafc !important;
             border: 1px solid #e2e8f0 !important;
@@ -250,7 +245,6 @@
         .relative.bg-gradient-to-r p { color: #475569 !important; }
         .relative.bg-gradient-to-r .absolute { display: none !important; }
 
-        /* كروت الـ Bento الـ 4 فـ سطر واحد متناسق */
         .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-4 {
             display: grid !important;
             grid-template-cols: repeat(4, minmax(0, 1fr)) !important;
@@ -264,10 +258,9 @@
             padding: 1rem !important;
         }
 
-        /* 📄 منع تقطيع المبيانات بشكل عشوائي وترتيبها */
         .grid-cols-1.lg\:grid-cols-3 {
             display: flex !important;
-            flex-direction: column !important; /* تحويلهم عمودياً فـ الطباعة باش ياخدو راحتهم */
+            flex-direction: column !important;
             gap: 1.5rem !important;
         }
 
@@ -276,12 +269,11 @@
             border: 1px solid #cbd5e1 !important;
             border-radius: 1.5rem !important;
             padding: 1.5rem !important;
-            page-break-inside: avoid !important; /* أمر صارم: ممنوع تقطع الكرت وسط الصفحة */
+            page-break-inside: avoid !important;
             break-inside: avoid !important;
             margin-bottom: 1.5rem !important;
         }
 
-        /* تحديد حجم منطقي للمبيانات فـ الورقة */
         .h-\[300px\], .h-\[250px\] {
             height: 240px !important; 
         }
@@ -290,7 +282,6 @@
             height: 100% !important;
         }
 
-        /* 📄 جدول البيانات ينزل فـ صفحة جديدة إيلا تاح الأمر بنقاء */
         .bg-\[\#0d0d0d\]\/40 {
             background: #ffffff !important;
             border: 1px solid #cbd5e1 !important;
@@ -303,7 +294,6 @@
         th { color: #475569 !important; background: #f8fafc !important; padding: 12px !important; }
         td { color: #000000 !important; padding: 12px !important; border-bottom: 1px solid #e2e8f0 !important; }
 
-        /* إعدادات هوامش الصفحة A4 */
         @page {
             size: A4;
             margin: 20mm 15mm 20mm 15mm;
