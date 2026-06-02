@@ -16,15 +16,16 @@ class ChatbotController extends Controller
         if (!$userMessage) {
             return response()->json(['reply' => 'صيفط شي ميساج أولا!']);
         }
+        
         $apiKey = env('GROQ_API_KEY');
 
         if (!$apiKey) {
-            return response()->json(['reply' => 'سْمْح ليا، الـ API Key ناقص فالسيستم، تأكد من ملف .env!']);
+            return response()->json(['reply' => 'سْمْح ليا،  API Key ناقص فالسيستم، تأكد من ملف .env!']);
         }
 
 
 
-        $systemPrompt = "أنت Agent AI SmartSol، مساعد ذكي ومتخصص في تقديم إجابات دقيقة ومفيدة في مجال الفلاحة و الطاقات الشمسية. 
+        $Prompt = "أنت Agent AI SmartSol، مساعد ذكي ومتخصص في تقديم إجابات دقيقة ومفيدة في مجال الفلاحة و الطاقات الشمسية. 
         هدفك هو مساعدة المستخدمين بأفضل طريقة ممكنة، مع الحفاظ على أسلوب ودود ومحترف
         الفلاحة (الزيتون، السقي، التسميد، التربة، ومكافحة الآفات)
         الا قالك سلام جاوبو بهاد الطريقة السلام و عليكم كيفاش نعاونك  مرحبا بيك فـ SmartSol، كيفاش نعاونك اليوم؟ 
@@ -83,12 +84,11 @@ class ChatbotController extends Controller
 
         try {
 
-
             $response = Http::withToken($apiKey)
                 ->post('https://api.groq.com/openai/v1/chat/completions', [
                     'model' => 'llama-3.1-8b-instant',
                     'messages' => [
-                        ['role' => 'system', 'content' => $systemPrompt],
+                        ['role' => 'system', 'content' => $Prompt],
                         ['role' => 'user', 'content' => $userMessage],
                     ],
                     'temperature' => 0.3,
@@ -104,9 +104,10 @@ class ChatbotController extends Controller
             $data = $response->json();
             $botReply = $data['choices'][0]['message']['content'] ?? 'الرد رجع خاوي، عاود صيفط الميساج.';
 
+            
             return response()->json(['reply' => trim($botReply)]);
+
         } catch (\Exception $e) {
-            // تسجيل الخطأ في الـ Logs وقراءته
             Log::error('Chatbot Error: ' . $e->getMessage());
             return response()->json(['reply' => 'السيستم غير متاح حالياً، وقع خطأ: ' . $e->getMessage()], 500);
         }

@@ -44,7 +44,7 @@
             </div>
             
             <nav class="hidden lg:flex gap-3 text-xs uppercase tracking-widest">
-                <a href="{{ route('dashboard') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('dashboard') ? 'active-nav' : '' }}">{{ __('Dashboard') }}</a>
+                <a href="{{ route('dashboard') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('dashboard') ? 'active-nav' : '' }}">{{ __('Tableau de bord') }}</a>
                 <a href="{{ route('panels.index') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('panels.index') ? 'active-nav' : '' }}">{{ __('Panneaux') }}</a>
                 <a href="{{ route('rapport') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('rapport')? 'active-nav' : '' }}">{{ __('Rapports') }}</a>
                 <a href="{{ route('companies') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('companies')? 'active-nav' : '' }}">{{ __('Maintenance') }}</a>
