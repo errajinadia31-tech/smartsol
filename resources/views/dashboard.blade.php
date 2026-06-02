@@ -8,7 +8,7 @@
         <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-[5rem] items-start">
             <div class="lg:col-span-1">
                 <h1 class="text-6xl font-bold mb-2 leading-tight">
-                    {{ __('Welcome in,') }}<br>
+                    {{ __('Bienvenu sur,') }}<br>
                     <span class="italic">Smart<span class="text-[#FBB108]">Sol</span></span>
                 </h1>
                 <p class="text-gray-400 text-lg font-light max-w-xs leading-relaxed">

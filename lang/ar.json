@@ -1,6 +1,6 @@
 {
     "SmartSol | Tableau de bord": "SmartSol | لوحة التحكم",
-    "Welcome in,": "مرحبا بك في،",
+    "Bienvenu sur,": "مرحبا بك في،",
     "Suivi et analyse de la production et de la consommation d'énergie solaire en temps réel.": "تتبع وتحليل إنتاج واستهلاك الطاقة الشمسية في الوقت الفعلي.",
     "Infrastructure": "البنية التحتية",
     "Total des Unités": "إجمالي الوحدات",
@@ -118,6 +118,6 @@
     "Serial No.": "الرقم التسلسلي",
     "Aucun équipement trouvé pour cette période.": "لم يتم العثور على أي معدات في هذه الفترة.",
     "Cliquez pour obtenir une analyse intelligente de votre production actuelle...": "انقر للحصول على تحليل ذكي لمنتجك الحالي...",
-    "Unités hors service. Vérifiez les connexions réseau ou l'alimentation": "الوحدات خارج الخدمة. تحقق من اتصالات الشبكة أو إمدادات الطاقة."
-
+    "Unités hors service. Vérifiez les connexions réseau ou l'alimentation": "الوحدات خارج الخدمة. تحقق من اتصالات الشبكة أو إمدادات الطاقة.",
+    "Demande-moi n'importe quoi..." :"اسألني عن أي شيء..."
 }

@@ -198,7 +198,7 @@
                        type="text" 
                        onkeypress="if(event.key === 'Enter') sendMessage()"
                        class="flex-1 bg-black/60 border border-white/10 rounded-xl text-white p-2.5 text-xs focus:outline-none focus:border-[#FBB108] transition-colors" 
-                       placeholder="{{ __('سولني على أي حاجة...') }}">
+                       placeholder="{{ __('Demande-moi n\'importe quoi...') }}">
                 
                 <button onclick="sendMessage()" class="bg-blue-600 hover:bg-[#FBB108] hover:text-black p-2.5 rounded-xl text-white font-bold transition-all duration-300 active:scale-95 flex items-center justify-center">
                     <i class="fa-solid fa-paper-plane text-md"></i>

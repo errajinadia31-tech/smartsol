@@ -1,6 +1,6 @@
 {
     "SmartSol | Tableau de bord": "SmartSol | Dashboard",
-    "Welcome in,": "Welcome,",
+    "Bienvenu sur,": "Welcome to,",
     "Suivi et analyse de la production et de la consommation d'énergie solaire en temps réel.": "Real-time monitoring and analysis of solar energy production and consumption.",
     "Infrastructure": "Infrastructure",
     "Total des Unités": "Total Units",
@@ -36,7 +36,7 @@
     "Voulez-vous vraiment vous déconnecter de votre session SmartSol ?": "Are you sure you want to log out of your SmartSol session?",
     "Annuler": "Cancel",
     "Se déconnecter": "Confirm Log Out",
-    "سولني على أي حاجة...": "Ask me anything...",
+    "Demande-moi n'importe quoi...": "Ask me anything...",
     "Bienvenue ! Je suis l'assistant intelligent de SmartSol. Je suis là pour vous aider dans tout ce qui concerne l'énergie solaire et l'agriculture. Comment puis-je vous aider aujourd'hui ?": "Welcome! I am the SmartSol AI Assistant. I am here to help you with everything related to solar energy and smart agriculture. How can I assist you today?",
     "SmartSol | Gestion des Panneaux": "SmartSol | Panel Management",
     "Gestion des Panneaux": "Panel Management",
@@ -101,7 +101,7 @@
     "Contact non disponible": "Contact information unavailable",
     "Aucun résultat trouvé": "No results found",
     "Essayez un autre nom ou une autre ville.": "Try searching for a different name or city.",
-    
+    "Demande-moi n'importe quoi:": "Ask me anything...",    
     "SmartSol | Rapport de Performance": "SmartSol | Performance Report",
     "Rapport de Performance": "Performance Report",
     "Analyse détaillée de votre infrastructure.": "Detailed analysis of your infrastructure.",
