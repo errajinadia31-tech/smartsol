@@ -37,12 +37,13 @@
         </div>
     </div>
 
-    {{-- Stats Grid --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12 print:grid-cols-4 print:gap-4 print:mb-8">
+    {{-- Stats Grid (موزعة على 5 أعمدة بالتساوي) --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12 print:grid-cols-5 print:gap-4 print:mb-8">
         @php
             $cards = [
                 ['label' => __('Total Panneaux'), 'val' => $stats['total_panels'], 'icon' => 'fa-solar-panel', 'color' => '#FBB108'],
                 ['label' => __('Capacité Totale'), 'val' => number_format($stats['total_power'], 0) . ' W', 'icon' => 'fa-bolt', 'color' => '#3b82f6'],
+                ['label' => __('Consommation Totale'), 'val' => number_format($stats['total_consumption'], 0) . ' Wh', 'icon' => 'fa-chart-simple', 'color' => '#a855f7'],
                 ['label' => __('Unités Actives'), 'val' => $stats['active_panels'], 'icon' => 'fa-plug-circle-check', 'color' => '#10b981'],
                 ['label' => __('Maintenance'), 'val' => $stats['maintenance'], 'icon' => 'fa-triangle-exclamation', 'color' => '#ef4444']
             ];
@@ -132,7 +133,7 @@
 </div>
 
 <script>
-    // 1. Power Chart (Bar Chart)
+    // 1. Power Chart (Bar Chart - سعة الألواح حسب المدن)
     new Chart(document.getElementById('powerChart'), {
         type: 'bar',
         data: {
@@ -245,13 +246,14 @@
         .relative.bg-gradient-to-r p { color: #475569 !important; }
         .relative.bg-gradient-to-r .absolute { display: none !important; }
 
-        .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-4 {
+        /* تعديل التصميم في الـ PDF باش الـ 5 كروت يجيو مقادين في صف واحد */
+        .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-3.lg\:grid-cols-5 {
             display: grid !important;
-            grid-template-cols: repeat(4, minmax(0, 1fr)) !important;
+            grid-template-cols: repeat(5, minmax(0, 1fr)) !important;
             gap: 1rem !important;
             margin-bottom: 2rem !important;
         }
-        .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-4 > div {
+        .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-3.lg\:grid-cols-5 > div {
             background: #ffffff !important;
             border: 1px solid #cbd5e1 !important;
             border-radius: 1rem !important;

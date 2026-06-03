@@ -84,7 +84,7 @@
                         <i class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
                     </button>
 
-                    <div id="profileMenu" class="absolute right-0 mt-3 w-48 bg-[#121212]/90 backdrop-blur-xl rounded-2xl border border-white/10 hidden shadow-2xl z-50 overflow-hidden">
+                    <div id="profileMenu" class="absolute right-0 mt-3 w-40 bg-[#121212]/90 backdrop-blur-xl rounded-2xl border border-white/10 hidden shadow-2xl z-50 overflow-hidden">
                         <div class="px-4 py-3 border-b border-white/5 bg-white/5">
                             <p class="text-[10px] text-gray-400 uppercase tracking-tighter">{{ __('Connecté en tant que') }}</p>
                             <p class="text-sm font-bold truncate text-white">{{ Auth::user()->name }}</p>
