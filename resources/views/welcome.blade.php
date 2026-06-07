@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <title>SmartSOL - Intelligent Solar Management</title>
 
     <style>
@@ -244,13 +242,15 @@
                             <i class="fa-solid fa-brain text-ener-gold mb-3 text-xl"></i>    
                                 <h4 class="text-white font-bold mb-2">Agent AI</h4>
                                 <p class="text-xs text-gray-500">
-Agent intelligent qui analyse les données en temps réel et fournit des recommandations pour optimiser le système</p>
+                                   Agent intelligent qui analyse les données en temps réel et fournit des recommandations pour optimiser le système
+                                </p>
                             </div>
                             <div class="p-6 bg-[#121212] rounded-xl border border-white/5 hover:border-ener-gold/30 transition">
                             <i class="fa-solid fa-bolt text-ener-gold mb-3 text-xl"></i>   
                                 <h4 class="text-white font-bold mb-2">Suivi Énergétique</h4>
                                 <p class="text-xs text-gray-500">
-Suivi simple de la production et de la consommation d’énergie.</p>
+                                  Suivi simple de la production et de la consommation d’énergie
+                                </p>
                             </div>
                         </div>
 
@@ -566,8 +566,8 @@ Suivi simple de la production et de la consommation d’énergie.</p>
                     <h4 class="text-white font-bold uppercase text-xs tracking-[0.2em] mb-6">Contact Tech</h4>
                     <ul class="space-y-4 text-sm text-gray-500">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-envelope text-[#FBB108] mt-1"></i>
-                            <a href="">smartsol@gmail.com</a>
+                            <i class="fa-solid fa-envelope text-[#FBB108] mt-1 "></i>
+                            <a href="" class=" hover:text-[#FBB108] text-sm transition">smartsol@gmail.com</a>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-location-dot text-[#FBB108] mt-1"></i>

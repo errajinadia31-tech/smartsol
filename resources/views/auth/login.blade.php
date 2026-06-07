@@ -8,8 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* تصغير ذكي باش نضمنو "No Scroll" ف الشاشات القصيرة */
-        @media (max-height: 720px) {
+
+@media (max-height: 720px) {
             .form-container { transform: scale(0.85); transform-origin: center; }
             .header-nav { top: 1rem !important; }
         }

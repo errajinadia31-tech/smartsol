@@ -215,7 +215,7 @@ class AssistantAiController extends Controller
             ]);
 
             return response()->json([
-                'error' => 'وقع خطأ فالسيرفر'
+                'error' => ' مكاينش الواح شمسية أو وقع خطأ داخلي. حاول مرة أخرى.'
             ], 500);
         }
     }
