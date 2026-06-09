@@ -36,9 +36,14 @@ public function panels()
 {
     return $this->hasMany(Panel::class);
 }
+public function routeNotificationForVonage($notification)
+{
+    return $this->phone_number;
+}
 protected $fillable = [
         'name',
         'email',
         'password',
+        'phone_number',
     ];
 }

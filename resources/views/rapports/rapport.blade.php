@@ -37,7 +37,6 @@
         </div>
     </div>
 
-    {{-- Stats Grid (موزعة على 5 أعمدة بالتساوي) --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12 print:grid-cols-5 print:gap-4 print:mb-8">
         @php
             $cards = [
@@ -48,6 +47,7 @@
                 ['label' => __('Maintenance'), 'val' => $stats['maintenance'], 'icon' => 'fa-triangle-exclamation', 'color' => '#ef4444']
             ];
         @endphp
+
 
         @foreach($cards as $card)
         <div class="bg-[#0d0d0d] border border-white/5 p-7 rounded-[2rem] hover:border-white/20 transition-all duration-500 relative overflow-hidden print:bg-gray-50 print:border-gray-200 print:p-5 print:rounded-2xl">

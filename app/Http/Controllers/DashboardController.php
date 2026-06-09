@@ -118,7 +118,21 @@ class DashboardController extends Controller
                 $production = min($maxCapacity, max(0, $production));
             }
         }
+if ($production < 100 && $userPanelsCount > 0) {
 
+    $recentAlert = Notification::where('user_id', $userId)
+        ->where('message', 'like', '%Production faible%')
+        ->where('created_at', '>=', now()->subHour())
+        ->exists();
+
+    if (!$recentAlert) {
+        Notification::create([
+            'user_id' => $userId,
+            'message' => '⚠️ Production faible : ' . round($production) . ' W',
+            'is_read' => false,
+        ]);
+    }
+}
         return response()->json([
             'production'  => (int) round($production),
             'consumption' => ($userPanelsCount > 0) ? rand(50, 300) : 0, 

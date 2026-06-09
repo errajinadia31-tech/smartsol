@@ -38,4 +38,9 @@ return [
 'groq' => [
     'api_key' => env('GROQ_API_KEY'),
 ],
+'vonage' => [
+    'api_key' => env('VONAGE_API_KEY'),
+    'api_secret' => env('VONAGE_API_SECRET'),
+    'sms_from' => env('VONAGE_SMS_FROM'), // هاد السطر هو اللي كان ناقص
+],
 ];

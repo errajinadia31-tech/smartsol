@@ -4,8 +4,8 @@
 
 @section('content')
 
-<div class="flex justify-between items-center mb-10 px-8">
-    <h1 class="text-2xl font-bold text-white">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-10 px-4 md:px-8">
+        <h1 class="text-2xl font-bold text-white">
         {{ __('Gestion des Panneaux') }}
     </h1>
 
@@ -133,11 +133,10 @@
 {{-- PANELS GRID --}}
 <div class="px-8 mt-10 rounded-3xl py-10">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         @forelse($panels as $panel)
 
-        <div class="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] hover:border-[#FBB108]/50 transition-all duration-500 overflow-hidden flex flex-col">
+        <div class="group relative overflow-hidden w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] hover:border-[#FBB108]/50 transition-all duration-500 overflow-hidden flex flex-col">
 
             {{-- IMAGE --}}
             <div class="relative h-48 w-full overflow-hidden">

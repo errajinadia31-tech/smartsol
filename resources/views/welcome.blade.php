@@ -532,14 +532,7 @@
                     <p class="text-gray-500 text-sm leading-relaxed mb-6">
                         Plateforme intelligente dédiée à l’analyse et l’optimisation de l’énergie solaire.
                     </p>
-                    <div class="flex gap-4">
-                        <a href="https://www.linkedin.com/in/nadia-erraji-17b804379/" target="_blank" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-[#FBB108] hover:text-[#FBB108] transition duration-300">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://github.com/errajinadia31-tech" target="_blank" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-[#FBB108] hover:text-[#FBB108] transition duration-300">
-                            <i class="fa-brands fa-github"></i>
-                        </a>
-                    </div>
+                  
                 </div>
 
                 <div>
@@ -566,15 +559,34 @@
                     <h4 class="text-white font-bold uppercase text-xs tracking-[0.2em] mb-6">Contact Tech</h4>
                     <ul class="space-y-4 text-sm text-gray-500">
                         <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-phone text-[#FBB108] mt-1 "></i>
+                            <a href="tel:+212612345678" class=" hover:text-[#FBB108] text-sm transition">+212 7 16 71 55 80</a>
+                        </li>
+                        <li class="flex items-start gap-3">
                             <i class="fa-solid fa-envelope text-[#FBB108] mt-1 "></i>
-                            <a href="" class=" hover:text-[#FBB108] text-sm transition">smartsol@gmail.com</a>
+                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=smartsoloujda26@gmail.com" target="_blank" class=" hover:text-[#FBB108] text-sm transition">smartsoloujda26@gmail.com</a>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-location-dot text-[#FBB108] mt-1"></i>
                             <span>Oujda, Maroc</span>
                         </li>
                     </ul>
+                      <div class="flex gap-4 mt-6">
+                        <a href="https://www.linkedin.com/in/nadia-erraji-17b804379/" target="_blank" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-[#FBB108] hover:text-[#FBB108] transition duration-300">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/errajinadia31-tech" target="_blank" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-[#FBB108] hover:text-[#FBB108] transition duration-300">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://whatsApp.com/+212716715580" target="_blank" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-[#FBB108] hover:text-[#FBB108] transition duration-300">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                        <a href="https://wa.me/212716715580?text=Bonjour%20SmartSol" target="_blank" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-[#FBB108] hover:text-[#FBB108] transition duration-300">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                    </div>
                 </div>
+                
             </div>
 
             <div class="border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -694,9 +706,6 @@
         });
     });
 
-    </script>
-
- 
+    </script> 
 </body>
-
 </html>

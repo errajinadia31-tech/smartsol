@@ -12,7 +12,6 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Middleware\SetLocaleMiddleware;
 use Illuminate\Support\Facades\Route;
 
-// --- Public Routes (البرانيين) ---
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -67,5 +66,6 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
 })->name('companies');
 
 });
+
 
 require __DIR__.'/auth.php';

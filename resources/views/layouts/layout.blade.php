@@ -34,27 +34,160 @@
 </style>
 </head>
 
-<body class="bg-cover bg-center h-screen bg-[url('{{ asset("images/dashboard_bg.jpeg") }}')]">
+<body class="bg-cover bg-center h-screen  bg-[url('{{ asset("images/dashboard_bg.jpeg") }}')]">
 
     <div class="h-full bg-black/70 backdrop-blur-[8px] p-6 flex flex-col">
-        <header class="flex items-center justify-between px-8 py-4 text-white mb-6">
-            <div class="flex items-center gap-2">
-                <img src="{{ asset('images/logo1.png') }}" class="w-[38px]" alt="Logo">
-                <span class="font-bold text-2xl tracking-tighter uppercase italic">Smart<span class="text-[#FBB108]">Sol</span></span>
-            </div>
+<header class="flex items-center justify-between px-3 md:px-8 py-4 text-white mb-6">
+
+    <!-- Logo Mobile -->
+    <div class="flex lg:hidden items-center gap-2">
+        <img src="{{ asset('images/logo1.png') }}" class="w-10" alt="Logo">
+    </div>
+
+<button id="burgerBtn"
+    class="lg:hidden text-white text-2xl ml-auto">
+    <i class="fas fa-bars"></i>
+</button>
+
+
+            <div class="hidden lg:flex items-center gap-2">
+    <img src="{{ asset('images/logo1.png') }}" class="w-[38px]" alt="Logo">
+    <span class="font-bold text-2xl tracking-tighter uppercase italic">
+        Smart<span class="text-[#FBB108]">Sol</span>
+    </span>
+</div>
             
-            <nav class="hidden lg:flex gap-3 text-xs uppercase tracking-widest">
-                <a href="{{ route('dashboard') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('dashboard') ? 'active-nav' : '' }}">{{ __('Tableau de bord') }}</a>
+<nav id="desktopNav" class="hidden lg:flex gap-3 text-xs uppercase tracking-widest">
+                    <a href="{{ route('dashboard') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('dashboard') ? 'active-nav' : '' }}">{{ __('Tableau de bord') }}</a>
                 <a href="{{ route('panels.index') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('panels.index') ? 'active-nav' : '' }}">{{ __('Panneaux') }}</a>
                 <a href="{{ route('rapport') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('rapport')? 'active-nav' : '' }}">{{ __('Rapports') }}</a>
                 <a href="{{ route('companies') }}" class="nav-link rounded-full px-5 py-2.5 {{ request()->routeIs('companies')? 'active-nav' : '' }}">{{ __('Maintenance') }}</a>
             </nav>
 
-      
+      <!-- Mobile Sidebar -->
+<div id="mobileSidebar"
+    class="fixed top-0 right-[-100%] w-[280px] h-full bg-[#121212]/95 backdrop-blur-xl border-r border-white/10 z-[999] transition-all duration-300 lg:hidden">
+
+    <div class="flex justify-between items-center p-6 border-b border-white/10">
+        <div class="flex items-center gap-2">
+            <img src="{{ asset('images/logo1.png') }}" class="w-8">
+            <span class="font-bold text-xl uppercase italic">
+                Smart<span class="text-[#FBB108]">Sol</span>
+            </span>
+        </div>
+
+        <button id="closeSidebar" class="text-white text-xl">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="flex flex-col gap-3 p-6 text-xs uppercase tracking-widest">
+
+        <a href="{{ route('dashboard') }}"
+           class="nav-link rounded-full px-5 py-3 {{ request()->routeIs('dashboard') ? 'active-nav' : '' }}">
+            {{ __('Tableau de bord') }}
+        </a>
+
+        <a href="{{ route('panels.index') }}"
+           class="nav-link rounded-full px-5 py-3 {{ request()->routeIs('panels.index') ? 'active-nav' : '' }}">
+            {{ __('Panneaux') }}
+        </a>
+
+        <a href="{{ route('rapport') }}"
+           class="nav-link rounded-full px-5 py-3 {{ request()->routeIs('rapport') ? 'active-nav' : '' }}">
+            {{ __('Rapports') }}
+        </a>
+
+        <a href="{{ route('companies') }}"
+           class="nav-link rounded-full px-5 py-3 {{ request()->routeIs('companies') ? 'active-nav' : '' }}">
+            {{ __('Maintenance') }}
+        </a>
+
+    </div>
+    <div class="border-t border-white/10 pt-4 mt-4">
+
+    <!-- Notifications -->
+    <button onclick="document.getElementById('mobileNotifications').classList.toggle('hidden')"
+        class="w-full flex items-center justify-between px-5 py-3 rounded-xl hover:bg-white/5 text-white">
+
+        <div class="flex items-center gap-3">
+            <i class="fa-regular fa-bell text-[#FBB108]"></i>
+            <span>{{ __('Notifications') }}</span>
+        </div>
+
+        <i class="fa-solid fa-chevron-down text-xs"></i>
+    </button>
+
+    <div id="mobileNotifications" class="hidden mt-2">
+
+        @forelse($notifications as $notif)
+            <div class="text-red-400 text-xs p-3 border-b border-white/5">
+                ⚠️ {{ $notif->message }}
+            </div>
+        @empty
+            <div class="text-gray-400 text-xs p-3">
+                {{ __('No notifications available') }}
+            </div>
+        @endforelse
+
+    </div>
+
+    <!-- Profile -->
+    <a href="{{ route('profile.edit') }}"
+       class="flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-white/5 text-white">
+
+        <i class="fa-regular fa-user text-[#FBB108]"></i>
+        <span>{{ __('Mon Profil') }}</span>
+
+    </a>
+
+    <!-- Languages -->
+    <div class="px-5 py-3">
+
+        <p class="text-[10px] uppercase text-gray-500 mb-3">
+            {{ __('Langue') }}
+        </p>
+
+        <div class="flex gap-3">
+
+            <a href="{{ route('lang.switch','ar') }}">
+                <img src="https://flagcdn.com/w40/ma.png"
+                     class="w-8 h-8 rounded-full object-cover">
+            </a>
+
+            <a href="{{ route('lang.switch','fr') }}">
+                <img src="https://flagcdn.com/w40/fr.png"
+                     class="w-8 h-8 rounded-full object-cover">
+            </a>
+
+            <a href="{{ route('lang.switch','en') }}">
+                <img src="https://flagcdn.com/w40/gb.png"
+                     class="w-8 h-8 rounded-full object-cover">
+            </a>
+
+        </div>
+    </div>
+
+    <!-- Logout -->
+    <button onclick="openLogoutModal()"
+        class="w-full flex items-center gap-3 px-5 py-3 rounded-xl text-red-400 hover:bg-red-500/10">
+
+        <i class="fa-solid fa-power-off"></i>
+        <span>{{ __('Déconnexion') }}</span>
+
+    </button>
+
+</div>
+</div>
+
+<!-- Overlay -->
+<div id="sidebarOverlay"
+     class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-[998] lg:hidden">
+</div>
 
             <div class="flex items-center gap-3">
                 
-                <div class="relative mx-2">
+                <div class="relative mx-2 hidden lg:block">
                     <button id="bell-btn" class="text-gray-300 hover:text-yellow-500 transition-all relative">
                         <i class="fa-regular fa-bell text-xl"></i>
                         <span id="alert-badge" class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full hidden"></span>
@@ -76,7 +209,7 @@
                     </div>
                 </div>
 
-                <div class="relative">
+                <div class="relative hidden lg:block">
                     <button onclick="toggleProfileMenu(event)" class="flex items-center gap-3 pl-2 py-1 rounded-full hover:bg-white/5 transition focus:outline-none">
                         <div class="w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#FBB108] to-yellow-200 text-black font-bold">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
@@ -102,8 +235,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="relative inline-block z-50">
-    <!-- Button -->
+<div class="relative inline-block z-50 hidden lg:block">
+        <!-- Button -->
     <button id="langButton"
         class="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-[#121212]/60 hover:border-white/30 transition">
         
@@ -178,8 +311,11 @@
             <i class="fa-brands fa-bots text-[#FBB108] text-3xl group-hover:text-blue-400 group-hover:scale-110 transition-all duration-300 relative z-10"></i>
         </button>
 
-        <div id="chat-window" class="fixed bottom-24 right-8 w-[500px] max-w-[calc(100vw-2rem)] bg-[#111111]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl hidden flex-col h-[630px] z-50 overflow-hidden transition-all duration-300">
-            <div class="p-4 border-b border-white/10 font-bold text-white bg-white/5 flex justify-between items-center shrink-0">
+<div id="chat-window"
+class="fixed bottom-24 right-2 md:right-8
+w-[95vw] md:w-[500px]
+max-w-[calc(100vw-1rem)]
+bg-[#111111]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl hidden flex-col h-[75vh] md:h-[630px] z-50 overflow-hidden transition-all duration-300">            <div class="p-4 border-b border-white/10 font-bold text-white bg-white/5 flex justify-between items-center shrink-0">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                     <span class="text-md tracking-wide font-mono text-green-500"> <i class="fa-solid fa-robot text-xs text-yellow-400"></i> SMARTSOL AGENT AI</span>
@@ -206,9 +342,9 @@
             </div>
         </div>
 
-        <main class="flex-1 overflow-y-auto custom-scrollbar">
-            @yield('content')
-        </main>
+       <main class="flex-1 overflow-y-auto custom-scrollbar overflow-x-hidden">
+    @yield('content')
+</main>
     </div>
 
     <style>
@@ -341,6 +477,26 @@
             menu.classList.add('hidden');
         }
     });
+
+    const burgerBtn = document.getElementById('burgerBtn');
+const sidebar = document.getElementById('mobileSidebar');
+const closeSidebar = document.getElementById('closeSidebar');
+const overlay = document.getElementById('sidebarOverlay');
+
+burgerBtn?.addEventListener('click', () => {
+    sidebar.style.right = '0';
+    overlay.classList.remove('hidden');
+});
+
+closeSidebar?.addEventListener('click', () => {
+    sidebar.style.right = '-100%';
+    overlay.classList.add('hidden');
+});
+
+overlay?.addEventListener('click', () => {
+    sidebar.style.left = '-100%';
+    overlay.classList.add('hidden');
+});
 </script>
 </body>
 </html>

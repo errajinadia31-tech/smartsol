@@ -31,10 +31,9 @@
             <div class="p-6 md:p-8 ">
                 
                 <div class="flex flex-col items-center mb-6">
-                    <div class="w-10 h-10 mb-2">
+                    <div class="w-10 h-10 mb-2 mt-12">
                         <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-full h-full object-contain text-center">
                     </div>
-                    <span class="font-bold text-xl md:text-2xl tracking-tighter uppercase italic text-center">Smart<span class="text-[#FBB108]">Sol</span></span>
                     <p class="text-white/60 text-[9px] uppercase tracking-[0.25em] text-center">Créer un compte</p>
                 </div>
 
@@ -58,7 +57,15 @@
                                 class="w-full bg-black/40 border border-white/5 rounded-2xl py-3 pl-11 pr-4 text-sm focus:border-[#FBB108]/50 focus:ring-0 transition-all outline-none placeholder:text-white/30 text-white">
                         </div>
                     </div>
-
+                    <div class="space-y-1">
+    <label class="text-[10px] font-bold text-white uppercase tracking-widest ml-1">Numéro de téléphone</label>
+    <div class="relative group">
+        <i class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#FBB108] transition-colors text-xs"></i>
+        <input type="text" name="phone_number" value="{{ old('phone_number') }}" required
+            class="w-full bg-black/40 border border-white/5 rounded-2xl py-3 pl-11 pr-4 text-sm focus:border-[#FBB108]/50 focus:ring-0 transition-all outline-none placeholder:text-white/30 text-white">
+    </div>
+    <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
+</div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div class="space-y-1">
                             <label class="text-[10px] font-bold text-white uppercase tracking-widest ml-1">Mot de passe</label>
