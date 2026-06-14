@@ -131,7 +131,6 @@
         @endforelse
 
     </div>
-
     <!-- Profile -->
     <a href="{{ route('profile.edit') }}"
        class="flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-white/5 text-white">

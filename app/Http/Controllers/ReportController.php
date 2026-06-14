@@ -45,12 +45,19 @@ class ReportController extends Controller
             })
             ->map(fn($group) => $group->sum('power_capacity'));
         
+           $totalSavings = EnergyData::whereHas('panel', function($q) use ($userId) {
+    $q->where('user_id', $userId);
+})->sum('energy_kwh') * 1.2;
+
+$stats['daily_economy'] = number_format($totalSavings, 2) . ' MAD';
+
         return view('rapports.rapport', [
             'panels'   => $panels,
             'stats'    => $stats,
             'labels'   => $chartData->keys(),
             'values'   => $chartData->values(),
-            'period'   => $days 
-        ]);
+            'period'   => $days,
+            'savings'  => number_format($totalSavings, 2)
+            ]);
     }
 }

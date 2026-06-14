@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Notifications\WelcomeSms; // ضروري هاد الـ Import
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Notifications\WelcomeNotification;
 
 class RegisteredUserController extends Controller
 {
@@ -44,8 +44,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        // إرسال الـ SMS أوتوماتيكياً بعد التسجيل
-        $user->notify(new WelcomeSms());
+        
+$user->notify(new WelcomeNotification());
 
         Auth::login($user);
 

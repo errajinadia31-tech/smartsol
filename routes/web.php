@@ -68,4 +68,16 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
 });
 
 
+// Route::get('/test-sms', function () {
+
+//     $user = \App\Models\User::find(9);
+
+//     \Log::info('Phone: ' . $user->phone_number);
+
+//     $user->notify(
+//         new \App\Notifications\LowProductionSmsNotification(50)
+//     );
+
+//     return 'SMS Sent';
+// });
 require __DIR__.'/auth.php';

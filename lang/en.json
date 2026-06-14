@@ -118,5 +118,9 @@
     "Serial No.": "Serial No.",
     "Aucun équipement trouvé pour cette période.": "No equipment found for this period.",
     "Cliquez pour obtenir une analyse intelligente de votre production actuelle...": "Click to get a smart analysis of your current production...",
-    "Unités hors service. Vérifiez les connexions réseau ou l'alimentation": "Units out of service. Please check network connections or power supply."
+    "Unités hors service. Vérifiez les connexions réseau ou l'alimentation": "Units out of service. Please check network connections or power supply.",
+    "Économie quotidienne":"Daily economy",
+    "prévisions de production":"Production Forecasts",
+    "Période:": "Period :",
+    "Date: ":"Date: "
 }

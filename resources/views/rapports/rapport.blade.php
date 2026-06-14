@@ -4,8 +4,9 @@
 @section('content')
 {{-- Chart.js CDN --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{-- Header --}}
 
-<div class="px-8 pb-20">
+<div class="px-8 pb-20 will-change-transform">
     {{-- Header "Modern Glassmorphism" --}}
     <div class="relative bg-gradient-to-r from-white/10 to-transparent p-8 rounded-[2.5rem] border border-white/10 mb-10 overflow-hidden">
         <div class="absolute -right-20 -top-20 w-64 h-64 bg-[#FBB108]/10 rounded-full blur-[100px]"></div>
@@ -17,7 +18,11 @@
                     <span class="text-[#FBB108] text-xs font-black uppercase tracking-[0.3em]">Analytics Engine</span>
                 </div>
                 <h1 class="text-4xl font-black text-white tracking-tighter">{{ __('Rapport de Performance') }}</h1>
-                <p class="text-gray-400 mt-2 font-light">{{ __('Analyse détaillée de votre infrastructure.') }}</p>
+                <p class="text-gray-400 mt-2 font-light italic">
+            {{ __('Période:') }} 
+            <span class="text-[#FBB108] font-bold">{{ request('period') ?? 30 }} {{ __('Jours') }}</span> | 
+            {{ __('Date:') }} {{ date('d/m/Y') }}
+        </p>
             </div>
             
             {{-- Filter & Print --}}
@@ -38,15 +43,18 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12 print:grid-cols-5 print:gap-4 print:mb-8">
-        @php
-            $cards = [
-                ['label' => __('Total Panneaux'), 'val' => $stats['total_panels'], 'icon' => 'fa-solar-panel', 'color' => '#FBB108'],
-                ['label' => __('Capacité Totale'), 'val' => number_format($stats['total_power'], 0) . ' W', 'icon' => 'fa-bolt', 'color' => '#3b82f6'],
-                ['label' => __('Consommation Totale'), 'val' => number_format($stats['total_consumption'], 0) . ' Wh', 'icon' => 'fa-chart-simple', 'color' => '#a855f7'],
-                ['label' => __('Unités Actives'), 'val' => $stats['active_panels'], 'icon' => 'fa-plug-circle-check', 'color' => '#10b981'],
-                ['label' => __('Maintenance'), 'val' => $stats['maintenance'], 'icon' => 'fa-triangle-exclamation', 'color' => '#ef4444']
-            ];
-        @endphp
+       @php
+    $cards = [
+        ['label' => __('Total Panneaux'), 'val' => $stats['total_panels'], 'icon' => 'fa-solar-panel', 'color' => '#FBB108'],
+        ['label' => __('Capacité Totale'), 'val' => number_format($stats['total_power'], 0) . ' W', 'icon' => 'fa-bolt', 'color' => '#3b82f6'],
+        ['label' => __('Consommation Totale'), 'val' => number_format($stats['total_consumption'], 0) . ' Wh', 'icon' => 'fa-chart-simple', 'color' => '#a855f7'],
+        
+        // هنا زدنا الكارت ديال التوفير المالي
+        ['label' => __('Daily Economy'), 'val' => $stats['daily_economy'], 'icon' => 'fa-money-bill-trend-up', 'color' => '#f59e0b'],
+        
+        ['label' => __('Maintenance'), 'val' => $stats['maintenance'], 'icon' => 'fa-triangle-exclamation', 'color' => '#ef4444']
+    ];
+@endphp
 
 
         @foreach($cards as $card)
@@ -300,6 +308,14 @@
             size: A4;
             margin: 20mm 15mm 20mm 15mm;
         }
+    }
+    .relative.bg-gradient-to-r p.text-gray-400 {
+        color: #000 !important;
+        font-weight: 600 !important;
+        display: block !important;
+    }
+    .text-\[\#FBB108\] {
+        color: #FBB108 !important; 
     }
 </style>
 @endsection

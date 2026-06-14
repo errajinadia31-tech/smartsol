@@ -443,7 +443,11 @@
                 <p class="text-xs text-gray-400 mt-1">Responsable Énergie</p>
                 
                 <div class="flex justify-center gap-1 text-[#E1A91A] my-4 text-sm">
-                    <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
                 </div>
 
                 <cite class="text-sm text-gray-300 leading-relaxed italic border-t border-white/[0.05] pt-4">
@@ -464,7 +468,7 @@
                 <p class="text-xs text-gray-400 mt-1 font-medium">Expert en énergies renouvelables</p>
                 
                 <div class="flex justify-center gap-1 text-[#E1A91A] my-4 text-sm">
-                    <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
 
                 <cite class="text-sm text-gray-300 leading-relaxed italic border-t border-white/[0.1] pt-4">
@@ -485,7 +489,7 @@
                 <p class="text-xs text-gray-400 mt-1">Chef de projet énergétique</p>
                 
                 <div class="flex justify-center gap-1 text-[#E1A91A] my-4 text-sm">
-                    <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
 
                 <cite class="text-sm text-gray-300 leading-relaxed italic border-t border-white/[0.05] pt-4">
@@ -506,7 +510,7 @@
                 <p class="text-xs text-gray-400 mt-1">Agriculteur</p>
                 
                 <div class="flex justify-center gap-1 text-[#E1A91A] my-4 text-sm">
-                    <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
 
                 <cite class="text-sm text-gray-300 leading-relaxed italic border-t border-white/[0.05] pt-4">

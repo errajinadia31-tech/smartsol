@@ -46,6 +46,7 @@
                             <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#FBB108] transition-colors text-xs"></i>
                             <input type="text" name="name" value="{{ old('name') }}" required autofocus
                                 class="w-full bg-black/40 border border-white/5 rounded-2xl py-3 pl-11 pr-4 text-sm focus:border-[#FBB108]/50 focus:ring-0 transition-all outline-none placeholder:text-white/30 text-white">
+                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
                     </div>
 
@@ -53,15 +54,16 @@
                         <label class="text-[10px] font-bold text-white uppercase tracking-widest ml-1">Identifiant</label>
                         <div class="relative group">
                             <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#FBB108] transition-colors text-xs"></i>
-                            <input type="email" name="email" value="{{ old('email') }}" required
+                            <input type="email" name="email" value="{{ old('email') }}" required  placeholder="nom@exemple.com"
                                 class="w-full bg-black/40 border border-white/5 rounded-2xl py-3 pl-11 pr-4 text-sm focus:border-[#FBB108]/50 focus:ring-0 transition-all outline-none placeholder:text-white/30 text-white">
+                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
                     </div>
                     <div class="space-y-1">
     <label class="text-[10px] font-bold text-white uppercase tracking-widest ml-1">Numéro de téléphone</label>
     <div class="relative group">
         <i class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#FBB108] transition-colors text-xs"></i>
-        <input type="text" name="phone_number" value="{{ old('phone_number') }}" required
+        <input type="text" name="phone_number" value="{{ old('phone_number') }}" required placeholder="Ex: +212612345678"
             class="w-full bg-black/40 border border-white/5 rounded-2xl py-3 pl-11 pr-4 text-sm focus:border-[#FBB108]/50 focus:ring-0 transition-all outline-none placeholder:text-white/30 text-white">
     </div>
     <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
@@ -71,16 +73,18 @@
                             <label class="text-[10px] font-bold text-white uppercase tracking-widest ml-1">Mot de passe</label>
                             <div class="relative group">
                                 <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#FBB108] transition-colors text-xs"></i>
-                                <input type="password" name="password" required
+                                <input type="password" name="password" required placeholder="********"
                                     class="w-full bg-black/40 border border-white/5 rounded-2xl py-3 pl-11 pr-4 text-sm focus:border-[#FBB108]/50 focus:ring-0 transition-all outline-none placeholder:text-white/30 text-white">
+                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
                             </div>
                         </div>
                         <div class="space-y-1">
                             <label class="text-[10px] font-bold text-white uppercase tracking-widest ml-1">Confirmation</label>
                             <div class="relative group">
                                 <i class="fa-solid fa-check-double absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#FBB108] transition-colors text-xs"></i>
-                                <input type="password" name="password_confirmation" required
+                                <input type="password" name="password_confirmation" required placeholder="********"
                                     class="w-full bg-black/40 border border-white/5 rounded-2xl py-3 pl-11 pr-4 text-sm focus:border-[#FBB108]/50 focus:ring-0 transition-all outline-none placeholder:text-white/30 text-white">
+                                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                             </div>
                         </div>
                     </div>

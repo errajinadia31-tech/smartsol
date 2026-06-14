@@ -62,7 +62,7 @@
                                     <span class="text-white">{{ $activePanelsCount }}</span>
                                 </div>
                                 <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-                                    <div class="bg-[#FBB108] h-full rounded-full" style="width: {{ $totalPanels > 0 ? ($activePanelsCount / $totalPanels) * 100 : 0 }}%"></div>
+                                    <div class="bg-[#FBB108] h-full rounded-full" style="width: '{{ $totalPanels > 0 ? ($activePanelsCount / $totalPanels) * 100 : 0 }}%'"></div>
                                 </div>
                             </div>
 
@@ -72,7 +72,7 @@
                                     <span class="text-red-500">{{ $maintenanceCount }}</span>
                                 </div>
                                 <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-                                    <div class="bg-red-500 h-full rounded-full" style="width: {{ $totalPanels > 0 ? ($maintenanceCount / $totalPanels) * 100 : 0 }}%"></div>
+                                    <div class="bg-red-500 h-full rounded-full" style="width: '{{ $totalPanels > 0 ? ($maintenanceCount / $totalPanels) * 100 : 0 }}%'"></div>
                                 </div>
                             </div>
                         </div>
@@ -114,10 +114,74 @@
         </div>
     </section>
 
-    <section class="mt-8">
+    <section class="mt-8 will-change-transform">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-            
-            <div class="bg-[#121212]/70 border border-[#FBB108]/30 p-8 rounded-[2rem] md:col-span-3 shadow-3xl">
+    <div class="bg-[#121212]/70 border border-[#FBB108]/30 p-8 rounded-[2rem] shadow-3xl">
+        <h3 class="text-[#FBB108] text-xs font-bold uppercase tracking-widest">{{ __('Économie quotidienne') }}</h3>
+        <p id="display-savings" class="text-white text-4xl font-black mt-4">0.00 <span class="text-sm text-gray-500 font-normal">MAD</span></p>
+    </div>
+
+    <div class="bg-[#121212]/70 border border-[#FBB108]/30 p-8 rounded-[2rem] shadow-3xl">
+        <h3 class="text-[#FBB108] text-xs font-bold uppercase tracking-widest">{{ __('prévisions de production') }}</h3>
+        <p id="display-forecast" class="text-white text-4xl font-black mt-4">0.00 <span class="text-sm text-gray-500 font-normal">W</span></p>
+    </div>
+
+    <!-- weatherCards start -->
+    @foreach($weatherCards as $city => $weather)
+
+    @if(!empty($weather))
+
+    <div class="bg-[#121212]/60 backdrop-blur-md border border-[#FBB108]/20 p-6 rounded-[2rem] w-full h-[150px] flex justify-between shadow-xl relative overflow-hidden group">
+
+        {{-- background icon --}}
+        <div class="absolute -right-6 -top-6 opacity-[0.04] group-hover:opacity-[0.10] transition rotate-12">
+            <i class="fa-solid fa-cloud text-[7rem] text-white"></i>
+        </div>
+
+        {{-- LEFT --}}
+        <div class="relative z-10 flex flex-col justify-between">
+
+            <div>
+                <h2 class="text-gray-400 text-[10px] uppercase tracking-[0.2em] font-black">
+                    {{ $weather['city'] ?? $city }}
+                </h2>
+
+                <span class="inline-block mt-2 text-[9px] text-gray-400 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                    {{ $weather['desc'] ?? '--' }}
+                </span>
+            </div>
+
+            <div class="flex items-end gap-2">
+                <span class="text-white text-5xl font-black italic">
+                    {{ $weather['temp'] ?? 0 }}
+                </span>
+                <span class="text-[#FBB108] text-sm font-bold mb-2">°C</span>
+            </div>
+
+        </div>
+
+        {{-- RIGHT --}}
+        <div class="relative z-10 flex flex-col items-end justify-between">
+
+            @if(!empty($weather['icon']))
+                <img src="http://openweathermap.org/img/wn/{{ $weather['icon'] }}.png"
+                     class="w-12 h-12">
+            @endif
+
+            <div class="text-[9px] text-gray-400 text-right">
+                <div>H <span class="text-white">{{ $weather['humidity'] ?? 0 }}%</span></div>
+                <div>W <span class="text-white">{{ $weather['wind'] ?? 0 }} km/h</span></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    @endif
+
+@endforeach
+    <!-- weatherCards end  -->
+            <div class="bg-[#121212]/70 border border-[#FBB108]/30 p-8 rounded-[2rem] md:col-span-3 shadow-3xl ">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-[#FBB108] font-bold italic uppercase tracking-widest text-sm">{{ __('Assistant SmartSol AI') }}</h2>
                     <button id="ai-btn" class="bg-[#FBB108] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase hover:scale-105 transition-all">
@@ -241,34 +305,58 @@
         const btn = document.getElementById('ai-btn');
         const output = document.getElementById('ai-response');
 
-        if(btn) {
-            btn.addEventListener('click', async () => {
-                const power = parseFloat(document.getElementById('live-power').innerText) || 0;
-                const cap = parseFloat(document.getElementById('total-cap').innerText) || 0;
+       if(btn) {
+    btn.addEventListener('click', async () => {
 
-                btn.innerText = "{{ __('Analyse en cours...') }}"; // تيكست ديناميكي بالفرنسية كـ مفتاح
-                btn.disabled = true;
+       const power = parseFloat(document.getElementById('live-power').innerText.replace(/[^0-9.]/g, '')) || 0;
+        const cap = parseFloat(document.getElementById('total-cap').innerText.replace(/[^0-9.]/g, '')) || 0;
+        btn.innerText = "{{ __('Analyse en cours...') }}";
+        btn.disabled = true;
 
-                try {
-                    const res = await fetch('/analyze-energy', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify({ prod: power, cap: cap })
-                    });
+        try {
 
-                    const data = await res.json();
-                    // هنا من الأحسن الـ Controller ديال /analyze-energy يرجع التكست مترجم واجد
-                    output.innerHTML = data.analysis ? "🤖 " + data.analysis : "❌ " + data.error;
-                } catch (e) {
-                    output.innerHTML = "❌ {{ __('Erreur de connexion') }}";
-                }
-                btn.innerText = "{{ __('Lancer Diagnostic') }}";
-                btn.disabled = false;
+            const res = await fetch('/analyze-energy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    prod: power,
+                    cap: cap
+                })
             });
+
+            const data = await res.json();
+
+            // تحديث Cards
+            if (data.metrics) {
+
+                document.getElementById('display-savings').innerHTML =
+                    `${Number(data.metrics.savings).toFixed(2)}
+                    <span class="text-sm text-gray-500 font-normal">MAD</span>`;
+
+                document.getElementById('display-forecast').innerHTML =
+                    `${Math.round(data.metrics.forecast)}
+                    <span class="text-sm text-gray-500 font-normal">W</span>`;
+            }
+
+            output.innerHTML = data.analysis
+                ? "🤖 " + data.analysis
+                : "❌ " + data.error;
+
+        } catch (e) {
+
+            output.innerHTML = "❌ {{ __('Erreur de connexion') }}";
+
+        } finally {
+
+            btn.innerText = "{{ __('Lancer Diagnostic') }}";
+            btn.disabled = false;
+
         }
+    });
+}
 
         function refreshSimulation() {
             fetch('{{ route("simulation.data") }}')
@@ -315,5 +403,6 @@
 
         energyChart.update('none');
     }
+    
 </script>
 @endsection

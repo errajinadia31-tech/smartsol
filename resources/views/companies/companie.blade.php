@@ -90,7 +90,6 @@
             ['name'=>'ChamsTech','city'=>'Maroc','phone'=>'+212 703 99 26 21','badge'=>'Renewable','icon'=>'bolt'],
             ['name'=>'Tawfir Energy','city'=>'Maroc','phone'=>'Non disponible','badge'=>'Smart Energy','icon'=>'lightbulb'],
             ['name'=>'Deep Solar','city'=>'Casablanca','phone'=>'+212 661 63 79 68','badge'=>'Photovoltaïque','icon'=>'solar-panel'],
-            ['name'=>'CI Energy','city'=>'Rabat','phone'=>'Non disponible','badge'=>'Green Energy','icon'=>'leaf'],
         ];
         @endphp
 
