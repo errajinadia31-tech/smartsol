@@ -15,8 +15,11 @@
             <div>
                 <div class="flex items-center gap-3 mb-2">
                     <span class="w-8 h-[2px] bg-[#FBB108]"></span>
-                    <span class="text-[#FBB108] text-xs font-black uppercase tracking-[0.3em]">Analytics Engine</span>
+                    <span class="text-[#FBB108] text-xs font-black uppercase tracking-[0.3em]">{{ __('Analytics Engine') }} </span>
                 </div>
+                <p class="text-white font-bold text-lg mt-2">
+    <span class="text-[#FBB108]">{{ __('Client:') }} </span> {{ Auth::user()->name }}
+</p>
                 <h1 class="text-4xl font-black text-white tracking-tighter">{{ __('Rapport de Performance') }}</h1>
                 <p class="text-gray-400 mt-2 font-light italic">
             {{ __('Période:') }} 
@@ -24,7 +27,6 @@
             {{ __('Date:') }} {{ date('d/m/Y') }}
         </p>
             </div>
-            
             {{-- Filter & Print --}}
             <div class="flex items-center gap-4">
                 <form action="{{ route('rapport') }}" method="GET" id="periodForm">
@@ -206,6 +208,22 @@
             cutout: '75%'
         }
     });
+    function printReport() {
+        var originalTitle = document.title;
+        
+        // هنا غادي نزيدو سمية المستخدم اللي داخل عن طريق Auth::user()->name
+        var userName = "{{ Auth::user()->name ?? 'User' }}";
+        var reportDate = "{{ date('Y-m-d') }}";
+        
+        // غيولي اسم الملف: SmartSol_Rapport_NomUser_Date
+        document.title = "SmartSol_Rapport_" + userName.replace(/\s+/g, '_') + "_" + reportDate;
+        
+        window.print();
+        
+        setTimeout(function() {
+            document.title = originalTitle;
+        }, 1000);
+    }
 </script>
 
 <style>
@@ -317,5 +335,7 @@
     .text-\[\#FBB108\] {
         color: #FBB108 !important; 
     }
+
+    
 </style>
 @endsection

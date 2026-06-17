@@ -123,5 +123,8 @@
     "Économie quotidienne":"الاقتصاد اليومي",
     "prévisions de production":"توقعات الإنتاج",
     "Période:": "الفترة",
-    "Date:": "التاريخ"
+    "Date:": "التاريخ",
+        "Client:": "العميل:",
+        "Analytics Engine": "محرك التحليل"
+     
 }

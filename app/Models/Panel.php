@@ -18,10 +18,6 @@ class Panel extends Model
         return $this->belongsTo(Zone::class);
     }
 
-    public function sensors() {
-        return $this->hasMany(Sensor::class);
-    }
-
     public function energyData() {
         return $this->hasMany(EnergyData::class);
     }
