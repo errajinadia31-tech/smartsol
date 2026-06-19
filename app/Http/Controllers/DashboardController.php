@@ -129,7 +129,6 @@ class DashboardController extends Controller
         ));
     }
 
-    // ⬇️ الـ Logic ديال السيمولاسيون رجع كـيف كـان بـالظبـط وبلا ما يقيس الـ Database ⬇️
 public function getSimulationData()
 {
     $user = Auth::user();

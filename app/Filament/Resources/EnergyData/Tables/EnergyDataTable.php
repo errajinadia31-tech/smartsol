@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\EnergyData\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -41,6 +42,13 @@ class EnergyDataTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+            ])
+             ->headerActions([
+                Action::make('imprimer')
+                    ->label('Imprimer')
+                    ->icon('heroicon-o-printer')
+                    ->url(route('admin.energy-data.print'))
+                    ->openUrlInNewTab(),
             ])
             ->filters([
                 //

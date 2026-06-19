@@ -10,6 +10,8 @@ use App\Http\Controllers\EnergyDataController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Middleware\SetLocaleMiddleware;
+use App\Models\EnergyData;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,7 +38,6 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
         
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard/data', [DashboardController::class, 'getDashboardData'])->name('dashboard.data');
         Route::get('/dashboard/simulation', [DashboardController::class, 'getSimulationData'])->name('simulation.data');
 
         // SmartSol AI & Chatbot
@@ -58,7 +59,6 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
         Route::get('/repport', [ReportController::class, 'rapport'])->name('rapport');
 
         // Notifications
-        Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     });
     Route::get('/companies', function () {
@@ -66,6 +66,17 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
 })->name('companies');
 
 });
+
+Route::get('/admin/print-view', function () {
+    $users = User::all(); // جلب جميع المستخدمين
+    return view('admin.print', compact('users')); // قمنا بتعديل الاسم هنا ليطابق اسم ملفك
+})->name('admin.users.print')->middleware(['web', 'auth']);
+
+
+Route::get('/admin/energy-print', function () {
+    $energyDatas = EnergyData::all();
+    return view('admin.print-energy', compact('energyDatas'));
+})->name('admin.energy-data.print')->middleware(['web', 'auth']);
 
 
 // Route::get('/test-sms', function () {

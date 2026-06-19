@@ -27,9 +27,10 @@ class PanelsTable
                 TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('zone_id')
-                    ->numeric()
-                    ->sortable(),
+              TextColumn::make('zone.city')
+    ->label('Ville')
+    ->sortable()
+    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

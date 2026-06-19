@@ -26,8 +26,10 @@ class PanelForm
                 TextInput::make('user_id')
                     ->required()
                     ->numeric(),
-                TextInput::make('zone_id')
-                    ->numeric(),
+             Select::make('zone_id')
+    ->relationship('zone', 'city') 
+    ->label('Ville')
+    ->required()
             ]);
     }
 }

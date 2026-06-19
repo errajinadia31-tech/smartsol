@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -33,6 +34,14 @@ class UsersTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                    
+            ])
+            ->headerActions([
+                Action::make('imprimer')
+                    ->label('Imprimer')
+                    ->icon('heroicon-o-printer')
+                    ->url(route('admin.users.print')) 
+                    ->openUrlInNewTab(),
             ])
             ->filters([
                 //

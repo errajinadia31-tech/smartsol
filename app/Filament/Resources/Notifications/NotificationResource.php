@@ -22,7 +22,7 @@ class NotificationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'alerts';
+    protected static ?string $recordTitleAttribute = 'message';
 
     public static function form(Schema $schema): Schema
     {
