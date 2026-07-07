@@ -10,10 +10,8 @@ class MoroccoZonesSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. جلب أول مستخدم موجود، وإذا لم يوجد ننشئ واحد جديد فوراً
         $user = User::first();
 
-        // تأمين إضافي: إذا لم تجد أي مستخدم، قم بإنشاء واحد افتراضي
         if (!$user) {
             $user = User::create([
                 'name' => 'Admin User',

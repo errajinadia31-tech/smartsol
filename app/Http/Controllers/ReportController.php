@@ -16,9 +16,9 @@ class ReportController extends Controller
         $userId = Auth::id();
         
         // 1. تحديد المدة (افتراضي 30 يوم) مع حصرها في القيم المطلوبة
-        $days = (int) $request->get('period', 30);
+        $days = (int) $request->get('period', 7);
         if (!in_array($days, [7, 15, 30, 90])) {
-            $days = 30;
+            $days = 7;
         }
         
         $dateLimit = now()->subDays($days);

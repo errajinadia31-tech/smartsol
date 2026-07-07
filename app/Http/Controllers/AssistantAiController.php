@@ -42,11 +42,11 @@ class AssistantAiController extends Controller
     {
         try {
             $apiKey = config('services.groq.api_key');
-$userPrompt = "تحليل الإنتاج: {$summary['prod']}w. التوفير: {$summary['savings']} درهم. التوقعات لغداً: {$summary['forecast']}w. حالة الجو: {$weather}. قدم ملخصاً تقنياً مركزاً.";
+$userPrompt = "تحليل الإنتاج: {$summary['prod']}w. التوفير: {$summary['savings']} درهم. التوقعات لغداً: {$summary['forecast']}w. حالة الجو: {$weather}. قدم ملخصاً مركزاً.";
             $response = Http::timeout(15)->withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
                 'model' => 'llama-3.1-8b-instant',
                 'messages' => [
-                ['role' => 'system', 'content' => "أنت واجهة ذكاء اصطناعي تقنية لمنصة SmartSol. مهمتك هي تقديم ملخص رقمي فقط. لا تستخدم عبارات ترحيبية أو كلام عاطفي و ممنوع التكرار . ابدأ مباشرة بالأرقام: 'الإنتاج الحالي: [X]، التوفير المحقق: [Y]، توقعات غداً: [Z]'. اختم بنصيحة تقنية واحدة فقط في جملة قصيرة جداً. استخدم لغة عربية تقنية جافة ومباشرة."],
+                ['role' => 'system', 'content' => "أنت واجهة ذكاء اصطناعي تقنية لمنصة SmartSol. مهمتك هي تقديم ملخص رقمي فقط. لا تستخدم عبارات ترحيبية أو كلام عاطفي و ممنوع التكرار . ابدأ مباشرة بالأرقام: 'الإنتاج الحالي: [X]، التوفير المحقق: [Y]، توقعات غداً: [Z]'. اختم بنصيحة تقنية واحدة فقط في جملة قصيرة جداً. استخدم لغة عربية تقنية ومباشرة."],
                 ['role' => 'user', 'content' => $userPrompt]
                 ],
                 'temperature' => 0.2,

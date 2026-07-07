@@ -32,6 +32,8 @@
         background: rgba(251, 177, 8, 0.4); 
     }
 </style>
+
+@livewireStyles
 </head>
 
 <body class="bg-cover bg-center h-screen  bg-[url('{{ asset("images/dashboard_bg.jpeg") }}')]">
@@ -497,5 +499,7 @@ overlay?.addEventListener('click', () => {
     overlay.classList.add('hidden');
 });
 </script>
+
+@livewireScripts
 </body>
 </html>

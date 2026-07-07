@@ -368,9 +368,9 @@
                         </li>
                     </ul>
                 </div>
-                <button class="plan-btn w-full mt-8 py-3 rounded-xl bg-[#E1A91A] text-black font-bold text-sm hover:bg-[#cda018] shadow-lg transition-all">
+                <a href="{{ route('paiement') }}" class="plan-btn w-full text-center mt-8 py-3 rounded-xl bg-[#E1A91A] text-black font-bold text-sm hover:bg-[#cda018] shadow-lg transition-all">
                     Plan Sélectionné
-                </button>
+                </a>
             </div>
 
             <div id="plan-enterprise" 

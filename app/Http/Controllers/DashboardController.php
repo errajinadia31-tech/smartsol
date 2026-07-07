@@ -30,35 +30,35 @@ class DashboardController extends Controller
         $maintenanceCount = $panels->where('status', 'maintenance')->count();
         $totalPower = $panels->sum('power_capacity');
 
-        // 🚀 حركة ذكية: توليد بيانات الأسبوع الأخير تلقائياً في الخلفية (مرة واحدة فقط)
-        // هاد الكود كيشوف يلا كانت الـ 7 أيام الأخيرة خاوية، كيزيد فيها أسطر حقيقية باش التقرير يخدم فوراً
+    
         if ($panelIds->isNotEmpty()) {
             $hasRecentData = EnergyData::whereIn('panel_id', $panelIds)
                 ->where('created_at', '>=', now()->subDays(3))
                 ->exists();
 
             if (!$hasRecentData) {
-                // نولدوا بيانات لآخر 5 أيام باش نعمروا الفراغ اللي تسبب ف الـ 0 Wh
-                for ($i = 5; $i >= 0; $i--) {
-                    EnergyData::create([
-                        'panel_id'    => $panelIds->first(),
-                        'power'       => rand(100, 400),
-                        'voltage'     => rand(200, 250),
-                        'current'     => rand(1, 5),
-                        'energy_kwh' => rand(1, 10) / 10,
-                        'consumption' => rand(150, 300), // استهلاك حقيقي للأيام الفايتة
-                        'created_at'  => now()->subDays($i)->setHour(12),
-                        'updated_at'  => now()->subDays($i)->setHour(12),
-                    ]);
-                }
-            }
+                foreach ($panelIds as $panelId) {
+    for ($i = 5; $i >= 0; $i--) {
+        EnergyData::create([
+            'panel_id'    => $panelId,
+            'power'       => rand(100, 400),
+            'voltage'     => rand(200, 250),
+            'current'     => rand(1, 5),
+            'energy_kwh'  => rand(1, 10) / 10,
+            'consumption' => rand(150, 300),
+            'created_at'  => now()->subDays($i)->setHour(12),
+            'updated_at'  => now()->subDays($i)->setHour(12),
+        ]);
+    }
+}
         }
 
         // 3. جلب آخر قراءات حية (Live Data) لكل لوحة وجمعها
         $latestReadingsPerPanel = EnergyData::whereIn('panel_id', $panelIds)
-            ->latest('created_at')
-            ->get()
-            ->unique('panel_id');
+    ->orderBy('created_at', 'desc')
+    ->get()
+    ->groupBy('panel_id')
+    ->map->first();
 
         $currentProduction = $latestReadingsPerPanel->sum('power');
         $currentConsommation = $latestReadingsPerPanel->sum('consumption');
@@ -129,6 +129,8 @@ class DashboardController extends Controller
         ));
     }
 
+
+    } 
 public function getSimulationData()
 {
     $user = Auth::user();

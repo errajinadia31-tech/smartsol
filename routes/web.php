@@ -12,7 +12,9 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Middleware\SetLocaleMiddleware;
 use App\Models\EnergyData;
 use App\Models\User;
+use App\Livewire\Dashboard;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,10 +23,8 @@ Route::get('/', function () {
 
 
 
-// --- Routes with Localization & Web Session ---
 Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
 
-    // Switch Language Route
     Route::get('lang/{locale}', function ($locale) {
         if (in_array($locale, ['ar', 'fr' ,'en'])) {
             session()->put('locale', $locale);
@@ -33,10 +33,8 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
         return redirect()->back();
     })->name('lang.switch');
 
-    // --- Authenticated & Verified Routes (الوسط للي محمي وخاصو الترجمة) ---
     Route::middleware(['auth', 'verified'])->group(function () {
         
-        // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/simulation', [DashboardController::class, 'getSimulationData'])->name('simulation.data');
 
@@ -49,13 +47,11 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-        // Resources (الـ CRUD كاملين دابا غايوليو مترجمين)
         Route::resource('zones', ZoneController::class);
         Route::resource('panels', PanelController::class);
         Route::resource('energy-data', EnergyDataController::class);
         Route::resource('reports', ReportController::class);
         
-        // Extra Report Route
         Route::get('/repport', [ReportController::class, 'rapport'])->name('rapport');
 
         // Notifications
@@ -68,8 +64,8 @@ Route::middleware(['web', SetLocaleMiddleware::class])->group(function () {
 });
 
 Route::get('/admin/print-view', function () {
-    $users = User::all(); // جلب جميع المستخدمين
-    return view('admin.print', compact('users')); // قمنا بتعديل الاسم هنا ليطابق اسم ملفك
+    $users = User::all(); 
+    return view('admin.print', compact('users')); 
 })->name('admin.users.print')->middleware(['web', 'auth']);
 
 
@@ -91,4 +87,13 @@ Route::get('/admin/energy-print', function () {
 
 //     return 'SMS Sent';
 // });
+
+
+Route::get('/paiement/smart-pro', function () {
+    return view('paiement.paiement');
+})->name('paiement');
+
+
+
+
 require __DIR__.'/auth.php';
