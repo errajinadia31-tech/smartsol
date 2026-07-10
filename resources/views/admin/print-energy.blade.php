@@ -48,6 +48,29 @@
             width: 50px;       
             object-fit: contain;
         }
+        .user-info h2,h4 {
+            color:#FBB108;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .user-info span {
+            color: #000000;
+        }
+        .imprimer-button a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #FBB108;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .user{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -55,6 +78,7 @@
         <div class="logo">
             <img src="{{ asset('images/logo1.png') }}" alt="Logo">
         </div>
+         
         <div>
         <h2>Rapport des Données d'Énergie</h2>
 
@@ -64,7 +88,15 @@
             <h1>Smart<span>Sol</span> </h1>
         </div>
         </header>
-
+        <div class="user">
+            <div class="user-info">
+            <h2>Client Informations:<span>{{ (Auth::user()->name)}}</span></h2>
+            <h4>Email:<span>{{ (Auth::user()->email)}}</span></h4>
+        </div>
+        <div class="imprimer-button">
+        <a href="{{ route('admin.energy-data.print') }}">Imprimer</a>
+        </div>
+        </div>
     <table>
         <thead>
             <tr>
