@@ -34,7 +34,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between; 
-            margin-bottom: 50px;
+            margin-bottom: 10px;
 
         }
 
@@ -47,6 +47,29 @@
             width: 50px;       
             object-fit: contain;
         }
+        .user-info h2,h4 {
+            color:#FBB108;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .user-info span {
+            color: #000000;
+        }
+        .imprimer-button a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #FBB108;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .user{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -55,14 +78,22 @@
             <img src="{{ asset('images/logo1.png') }}" alt="Logo">
         </div>
         <div>
-                <h2 class="text-">{{ __("Liste D'utilisateurs") }}</h2>
+            <h2 class="text-">{{ __("Liste D'utilisateurs") }}</h2>
 
         </div>
         <div>
             <h1>Smart<span>Sol</span> </h1>
         </div>
         </header>
-
+        <div class="user">
+            <div class="user-info">
+            <h2>Client Informations:<span>{{ (Auth::user()->name)}}</span></h2>
+            <h4>Email:<span>{{ (Auth::user()->email)}}</span></h4>
+        </div>
+        <div class="imprimer-button">
+        <a href="{{ route('admin.users.print') }}">Imprimer</a>
+        </div>
+        </div>
     <table>
         <thead>
             <tr>
@@ -85,7 +116,6 @@
     </table>
 
     <script>
-
             window.onload = function() {
             window.print();
         };
